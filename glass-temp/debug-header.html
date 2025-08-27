@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug MainHeader</title>
+    <style>
+        body { background: black; color: white; padding: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Debug MainHeader Component</h1>
+    <div id="debug-container"></div>
+    
+    <script type="module">
+        console.log('🔍 Debug script loading...');
+        
+        // Import MainHeader directly
+        try {
+            console.log('🔍 Importing MainHeader...');
+            await import('./src/ui/app/MainHeader.js');
+            console.log('✅ MainHeader imported successfully');
+            
+            // Create MainHeader element
+            console.log('🔍 Creating main-header element...');
+            const mainHeader = document.createElement('main-header');
+            console.log('✅ MainHeader element created:', mainHeader);
+            
+            // Add to DOM
+            const container = document.getElementById('debug-container');
+            container.appendChild(mainHeader);
+            console.log('✅ MainHeader added to DOM');
+            
+        } catch (error) {
+            console.error('❌ Error loading MainHeader:', error);
+        }
+    </script>
+</body>
+</html>
