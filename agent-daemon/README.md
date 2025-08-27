@@ -1,11 +1,11 @@
-# Glass Agent Daemon
+# Orbit Agent Daemon
 
-Python backend service for the Glass AI Desktop Assistant that provides browser automation and AI agent capabilities.
+Python backend service for the Orbit AI Desktop Assistant that provides browser automation and AI agent capabilities.
 
 ## Features
 
 - FastAPI-based web server
-- WebSocket support for real-time communication with Glass app  
+- WebSocket support for real-time communication with Orbit app  
 - Browser automation using browser-use library
 - RESTful API endpoints for agent task execution
 - Health check and monitoring endpoints
@@ -37,11 +37,11 @@ The server will be available at `http://localhost:8000`
 - `GET /` - Root endpoint with service status
 - `GET /health` - Health check endpoint
 - `POST /agent/execute` - Execute browser automation tasks
-- `WebSocket /ws` - Real-time communication with Glass app
+- `WebSocket /ws` - Real-time communication with Orbit app
 
 ## Integration
 
-This agent daemon integrates with the Glass desktop application (`glass-temp/`) to provide:
+This agent daemon integrates with the Orbit desktop application (`glass-temp/`) to provide:
 - Browser automation capabilities
 - AI-powered web interaction
 - Real-time task execution

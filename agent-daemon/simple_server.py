@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple Agent Server for Glass Desktop Assistant
+Simple Agent Server for Orbit Desktop Assistant
 Provides browser automation and AI agent capabilities
 """
 
@@ -15,27 +15,27 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Create FastAPI app
-app = FastAPI(title="Glass Agent Server", version="1.0.0")
+app = FastAPI(title="Orbit Agent Server", version="1.0.0")
 
 @app.get("/")
 async def root():
     """Health check endpoint"""
-    return {"status": "Glass Agent Server is running"}
+    return {"status": "Orbit Agent Server is running"}
 
 @app.get("/health")
 async def health():
     """Health check endpoint"""
-    return {"status": "healthy", "service": "glass-agent-server"}
+    return {"status": "healthy", "service": "orbit-agent-server"}
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    """WebSocket endpoint for real-time communication with Glass app"""
+    """WebSocket endpoint for real-time communication with Orbit app"""
     await websocket.accept()
     logger.info("WebSocket connection established")
     
     try:
         while True:
-            # Receive message from Glass app
+            # Receive message from Orbit app
             data = await websocket.receive_text()
             logger.info(f"Received: {data}")
             
@@ -75,7 +75,7 @@ async def execute_agent_task(task: dict):
         }
 
 if __name__ == "__main__":
-    logger.info("Starting Glass Agent Server...")
+    logger.info("Starting Orbit Agent Server...")
     
     # Run the server
     uvicorn.run(
