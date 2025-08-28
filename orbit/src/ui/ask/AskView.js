@@ -341,30 +341,17 @@ export class AskView extends LitElement {
             flex-direction: column;
             height: 100%;
             width: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: #000000;
             border-radius: 12px;
-            outline: 0.5px rgba(255, 255, 255, 0.3) solid;
+            outline: 0.5px #333333 solid;
             outline-offset: -1px;
-            backdrop-filter: blur(1px);
             box-sizing: border-box;
             position: relative;
             overflow: hidden;
         }
 
         .ask-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            filter: blur(10px);
-            z-index: -1;
+            display: none;
         }
 
         .response-header {
@@ -566,6 +553,24 @@ export class AskView extends LitElement {
             max-height: 400px;
             position: relative;
         }
+        
+        .response-container h1,
+        .response-container h2,
+        .response-container h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .response-container h1 img,
+        .response-container h2 img,
+        .response-container h3 img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            vertical-align: middle;
+            display: inline-block;
+        }
 
         .response-container.hidden {
             display: none;
@@ -685,7 +690,7 @@ export class AskView extends LitElement {
             display: inline-block;
             width: 20px;
             height: 20px;
-            background-image: url('../assets/logoloading.png');
+            background-image: url('../../../public/assets/logoloading.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -715,7 +720,7 @@ export class AskView extends LitElement {
             content: '';
             width: 20px;
             height: 20px;
-            background-image: url('../assets/logoloading.png');
+            background-image: url('../../../public/assets/logoloading.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -732,21 +737,28 @@ export class AskView extends LitElement {
         .loading-enhanced {
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: rgba(255, 255, 255, 0.8);
-            padding: 12px 16px;
+            justify-content: center;
+            padding: 24px;
             border-radius: 8px;
-            font-style: italic;
-            font-size: 14px;
             margin: 16px 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333333;
+            background: #000000;
+        }
+
+        .loading-logo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 16px 0;
+            background: none;
+            border: none;
+            padding: 0;
         }
 
         .loading-logo {
-            width: 20px;
-            height: 20px;
-            background-image: url('../assets/logoloading.png');
+            width: 60px;
+            height: 60px;
+            background-image: url('../../../public/assets/logoloading.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
@@ -855,6 +867,18 @@ export class AskView extends LitElement {
             color: rgba(255, 255, 255, 0.95);
             margin: 16px 0 8px 0;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .response-line h1 img,
+        .response-line h2 img,
+        .response-line h3 img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            vertical-align: middle;
         }
 
         .response-line p {
@@ -1441,14 +1465,7 @@ export class AskView extends LitElement {
     renderFallbackContent(responseContainer) {
         let textToRender = this.currentResponse || '';
         
-        // Pre-process the text to convert loading indicator to HTML
-        if (textToRender.includes('*🔄 Generating enhanced sections')) {
-            console.log('[AskView] Found loading indicator in text, converting to HTML');
-            textToRender = textToRender.replace(
-                /\*🔄 Generating enhanced sections \(AI Overview, Wikipedia, Reddit, TL;DR\)...\*/g,
-                '<div class="loading-enhanced"><div class="loading-logo"></div>Generating enhanced sections (AI Overview, Wikipedia, Reddit, TL;DR)...</div>'
-            );
-        }
+        // No loading indicator needed
         
         if (this.isLibrariesLoaded && this.marked && this.DOMPurify) {
             try {
@@ -1456,14 +1473,17 @@ export class AskView extends LitElement {
                 const parsedHtml = this.marked.parse(textToRender);
 
                 // DOMPurify로 정제
-                const cleanHtml = this.DOMPurify.sanitize(parsedHtml, {
+                let cleanHtml = this.DOMPurify.sanitize(parsedHtml, {
                     ALLOWED_TAGS: [
                         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'b', 'em', 'i',
                         'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'a', 'img', 'table', 'thead',
                         'tbody', 'tr', 'th', 'td', 'hr', 'sup', 'sub', 'del', 'ins', 'div', 'span',
                     ],
-                    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'target', 'rel'],
+                    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'target', 'rel', 'style'],
+                    ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|file):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
                 });
+
+                // No loading processing needed
 
                 responseContainer.innerHTML = cleanHtml;
 
@@ -1483,30 +1503,18 @@ export class AskView extends LitElement {
             // 라이브러리가 로드되지 않았을 때 기본 렌더링
             let processedText = textToRender;
             
-            // Handle loading indicator first before HTML escaping
-            if (processedText.includes('*🔄 Generating enhanced sections')) {
-                console.log('[AskView] Fallback: Found loading indicator, converting to HTML');
-                processedText = processedText.replace(
-                    /\*🔄 Generating enhanced sections \(AI Overview, Wikipedia, Reddit, TL;DR\)...\*/g,
-                    '<div class="loading-enhanced"><div class="loading-logo"></div>Generating enhanced sections (AI Overview, Wikipedia, Reddit, TL;DR)...</div>'
-                );
-                
-                // For HTML content with div, render directly
-                responseContainer.innerHTML = processedText;
-            } else {
-                // Normal text processing with HTML escaping
-                const basicHtml = processedText
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/\n\n/g, '</p><p>')
-                    .replace(/\n/g, '<br>')
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/`([^`]+)`/g, '<code>$1</code>');
+            // Normal text processing with HTML escaping
+            const basicHtml = processedText
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>');
 
-                responseContainer.innerHTML = `<p>${basicHtml}</p>`;
-            }
+            responseContainer.innerHTML = `<p>${basicHtml}</p>`;
         }
     }
 

@@ -527,10 +527,6 @@ class AskService {
                 }
                 
                 // Generate enhanced response with AI Overview, Wikipedia, Reddit, and TL;DR immediately
-                // Show enhancement indicator first
-                this.state.currentResponse = fullResponse + `\n\n*⚡ Generating enhanced sections (AI Overview, Wikipedia, Reddit, TL;DR)...*`;
-                this._broadcastState();
-                
                 // Generate enhanced response without delay
                 (async () => {
                     try {
@@ -579,7 +575,7 @@ class AskService {
                 return null;
             }
             
-            if (originalResponse.includes('## AI Overview')) {
+            if (originalResponse.includes('<h1>AI Overview</h1>') || originalResponse.includes('## AI Overview')) {
                 console.log('[AskService] Skipping enhancement - already enhanced');
                 return null;
             }
@@ -641,22 +637,22 @@ class AskService {
             let sectionsAdded = 0;
 
             if (aiOverview) {
-                enhancedResponse += `\n\n## AI Overview\n\n${aiOverview}`;
+                enhancedResponse += `\n\n# AI Overview\n\n${aiOverview}`;
                 sectionsAdded++;
             }
 
             if (wikipediaContent) {
-                enhancedResponse += `\n\n## Wikipedia\n\n${wikipediaContent}`;
+                enhancedResponse += `\n\n# Wikipedia ![Wikipedia](file:///Users/kebing/Desktop/paradoxe-orbit/orbit/public/assets/Wikipedia-logo.png)\n\n${wikipediaContent}`;
                 sectionsAdded++;
             }
 
             if (redditContent) {
-                enhancedResponse += `\n\n## Community Discussions (Reddit)\n\n${redditContent}`;
+                enhancedResponse += `\n\n# Community Discussions ![Reddit](file:///Users/kebing/Desktop/paradoxe-orbit/orbit/public/assets/231207_snoo_head_HOME_02.png)\n\n${redditContent}`;
                 sectionsAdded++;
             }
 
             if (tldrContent) {
-                enhancedResponse += `\n\n## TL;DR\n\n${tldrContent}`;
+                enhancedResponse += `\n\n# TL;DR\n\n${tldrContent}`;
                 sectionsAdded++;
             }
 
