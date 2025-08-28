@@ -43,8 +43,7 @@ export class ApiKeyHeader extends LitElement {
             width: 100%;
             height: 100%;
             padding: 24px 16px;
-            background: rgba(0, 0, 0, 0.64);
-            box-shadow: 0px 0px 0px 1.5px rgba(255, 255, 255, 0.64) inset;
+            background: #2a2a2a;
             border-radius: 16px;
             flex-direction: column;
             justify-content: flex-start;
@@ -52,6 +51,11 @@ export class ApiKeyHeader extends LitElement {
             gap: 24px;
             display: flex;
             -webkit-app-region: drag;
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.4),
+                -8px -8px 16px rgba(255, 255, 255, 0.02),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.02),
+                inset -1px -1px 2px rgba(0, 0, 0, 0.3);
         }
         .header {
             width: 100%;
@@ -66,60 +70,69 @@ export class ApiKeyHeader extends LitElement {
             position: absolute;
             top: 16px;
             right: 16px;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 24px;
+            height: 24px;
+            background: #1a1a1a;
             border: none;
-            border-radius: 5px;
-            color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            color: #ffffff;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             z-index: 10;
             font-size: 16px;
             line-height: 1;
             padding: 0;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(255, 255, 255, 0.02);
         }
         .close-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
         .back-button {
             -webkit-app-region: no-drag;
-            padding: 8px;
+            padding: 8px 12px;
             left: 0px;
             top: -7px;
             position: absolute;
-            background: rgba(132.6, 132.6, 132.6, 0.8);
+            background: #1a1a1a;
             border-radius: 16px;
-            border: 0.5px solid rgba(255, 255, 255, 0.5);
+            border: none;
             justify-content: center;
             align-items: center;
             gap: 4px;
             display: flex;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(255, 255, 255, 0.02);
         }
         .back-button:hover {
-            background: rgba(150, 150, 150, 0.9);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
         .arrow-icon-left {
-            border: solid #dcdcdc;
+            border: solid #ffffff;
             border-width: 0 1.2px 1.2px 0;
             display: inline-block;
             padding: 3px;
             transform: rotate(135deg);
         }
         .back-button-text {
-            color: white;
+            color: #ffffff;
             font-size: 12px;
             font-weight: 500;
             padding-right: 4px;
         }
         .title {
-            color: white;
+            color: #ffffff;
             font-size: 14px;
             font-weight: 700;
         }
@@ -136,7 +149,7 @@ export class ApiKeyHeader extends LitElement {
             align-items: center;
         }
         .label {
-            color: white;
+            color: #ffffff;
             font-size: 12px;
             font-weight: 600;
         }
@@ -145,40 +158,49 @@ export class ApiKeyHeader extends LitElement {
             width: 240px;
             overflow: hidden;
             border-radius: 12px;
-            border: 0.5px solid rgba(255, 255, 255, 0.5);
+            background: #1a1a1a;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.4),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
         .provider-button {
             -webkit-app-region: no-drag;
             padding: 4px 8px;
-            background: rgba(20.4, 20.4, 20.4, 0.32);
-            color: #dcdcdc;
+            background: #333333;
+            color: #cccccc;
             font-size: 11px;
             font-weight: 450;
             letter-spacing: 0.11px;
             border: none;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
             flex: 1;
         }
         .provider-button:hover {
-            background: rgba(80, 80, 80, 0.48);
+            background: #444444;
         }
         .provider-button[data-status='active'] {
-            background: rgba(142.8, 142.8, 142.8, 0.48);
+            background: #555555;
             color: white;
+            box-shadow: 
+                inset 1px 1px 2px rgba(0, 0, 0, 0.3),
+                inset -1px -1px 2px rgba(255, 255, 255, 0.02);
         }
         .api-input {
             -webkit-app-region: no-drag;
             width: 240px;
             padding: 10px 8px;
-            background: rgba(61.2, 61.2, 61.2, 0.8);
+            background: #1a1a1a;
             border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.24);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
             font-size: 11px;
             text-overflow: ellipsis;
             font-family: inherit;
             line-height: inherit;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.4),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
         .ollama-action-button {
             -webkit-app-region: no-drag;
@@ -214,7 +236,7 @@ export class ApiKeyHeader extends LitElement {
             color: white;
         }
         .api-input::placeholder {
-            color: #a0a0a0;
+            color: #666666;
         }
         .confirm-button-container {
             width: 100%;
@@ -225,30 +247,36 @@ export class ApiKeyHeader extends LitElement {
             -webkit-app-region: no-drag;
             width: 240px;
             padding: 8px;
-            background: rgba(132.6, 132.6, 132.6, 0.8);
-            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.16);
+            background: #333333;
             border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(255, 255, 255, 0.02);
         }
         .confirm-button:hover {
-            background: rgba(150, 150, 150, 0.9);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
         .confirm-button:disabled {
-            background: rgba(255, 255, 255, 0.12);
-            color: #bebebe;
-            border: 0.5px solid rgba(255, 255, 255, 0.24);
-            box-shadow: none;
+            background: #1a1a1a;
+            color: #666666;
+            border: 0.5px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 
+                inset 1px 1px 2px rgba(0, 0, 0, 0.3),
+                inset -1px -1px 2px rgba(255, 255, 255, 0.01);
             cursor: not-allowed;
         }
         .footer {
             width: 100%;
             text-align: center;
-            color: #dcdcdc;
+            color: #cccccc;
             font-size: 12px;
             font-weight: 500;
             line-height: 18px;
@@ -304,7 +332,7 @@ export class ApiKeyHeader extends LitElement {
             }
         }
         .api-input.invalid {
-            outline: 1px solid #ff7070;
+            outline: 1px solid #ff6b6b;
             outline-offset: -1px;
         }
         .input-wrapper {
@@ -314,7 +342,7 @@ export class ApiKeyHeader extends LitElement {
             align-items: flex-start;
         }
         .inline-error-message {
-            color: #ff7070;
+            color: #ff6b6b;
             font-size: 11px;
             font-weight: 400;
             letter-spacing: 0.11px;

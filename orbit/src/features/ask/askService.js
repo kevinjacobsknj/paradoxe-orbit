@@ -637,22 +637,22 @@ class AskService {
             let sectionsAdded = 0;
 
             if (aiOverview) {
-                enhancedResponse += `\n\n# AI Overview\n\n${aiOverview}`;
+                enhancedResponse += `\n\n## AI Overview\n\n${aiOverview}`;
                 sectionsAdded++;
             }
 
             if (wikipediaContent) {
-                enhancedResponse += `\n\n# Wikipedia ![Wikipedia](file:///Users/kebing/Desktop/paradoxe-orbit/orbit/public/assets/Wikipedia-logo.png)\n\n${wikipediaContent}`;
+                enhancedResponse += `\n\n## Wikipedia\n\n${wikipediaContent}`;
                 sectionsAdded++;
             }
 
             if (redditContent) {
-                enhancedResponse += `\n\n# Community Discussions ![Reddit](file:///Users/kebing/Desktop/paradoxe-orbit/orbit/public/assets/231207_snoo_head_HOME_02.png)\n\n${redditContent}`;
+                enhancedResponse += `\n\n## Community Discussions\n\n${redditContent}`;
                 sectionsAdded++;
             }
 
             if (tldrContent) {
-                enhancedResponse += `\n\n# TL;DR\n\n${tldrContent}`;
+                enhancedResponse += `\n\n## TL;DR\n\n${tldrContent}`;
                 sectionsAdded++;
             }
 

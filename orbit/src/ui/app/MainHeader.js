@@ -110,7 +110,7 @@ export class MainHeader extends LitElement {
             width: 100%;
             height: 47px;
             padding: 0px 10px 0px 13px;
-            background: rgba(0, 0, 0, 0.85);
+            background: #2a2a2a;
             overflow: hidden;
             border-radius: 9000px;
             justify-content: space-between;
@@ -118,56 +118,49 @@ export class MainHeader extends LitElement {
             display: flex;
             position: relative;
             box-sizing: border-box;
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.4),
+                -8px -8px 16px rgba(60, 60, 60, 0.3),
+                inset 1px 1px 2px rgba(80, 80, 80, 0.3),
+                inset -1px -1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .header::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 9000px;
-            z-index: -1;
+            display: none;
         }
 
         .header::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 9000px;
-            padding: 1px;
-            background: linear-gradient(169deg, rgba(255, 255, 255, 0.17) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.17) 100%); 
-            -webkit-mask:
-                linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: destination-out;
-            mask-composite: exclude;
-            pointer-events: none;
+            display: none;
         }
 
         .listen-button {
             -webkit-app-region: no-drag;
-            height: 28px;
-            width: 28px;
-            padding: 2px;
-            background: rgba(0, 0, 0, 0.85);
+            height: 32px;
+            width: 32px;
+            padding: 4px;
+            background: #2a2a2a;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            transition: transform 0.2s ease, opacity 0.2s ease;
+            transition: all 0.2s ease;
+            box-shadow: 
+                4px 4px 8px rgba(0, 0, 0, 0.4),
+                -4px -4px 8px rgba(60, 60, 60, 0.3);
         }
 
         .listen-button:hover {
-            transform: scale(1.1);
-            opacity: 0.9;
+            box-shadow: 
+                6px 6px 12px rgba(0, 0, 0, 0.5),
+                -6px -6px 12px rgba(70, 70, 70, 0.4);
         }
 
         .listen-button:active {
-            transform: scale(0.95);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.6),
+                inset -2px -2px 4px rgba(60, 60, 60, 0.3);
         }
 
         .listen-button:disabled {
@@ -235,11 +228,17 @@ export class MainHeader extends LitElement {
             display: flex;
             padding: 0 8px;
             border-radius: 6px;
-            transition: background 0.15s ease;
+            transition: all 0.2s ease;
+            background: #2a2a2a;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(60, 60, 60, 0.3);
         }
 
         .header-actions:hover {
-            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                4px 4px 8px rgba(0, 0, 0, 0.5),
+                -4px -4px 8px rgba(70, 70, 70, 0.4);
         }
 
         .ask-action {
@@ -256,7 +255,7 @@ export class MainHeader extends LitElement {
         }
 
         .action-text-content {
-            color: white;
+            color: #ffffff;
             font-size: 12px;
             font-family: 'Helvetica Neue', sans-serif;
             font-weight: 500; /* Medium */
@@ -284,35 +283,43 @@ export class MainHeader extends LitElement {
         }
 
         .icon-box {
-            color: white;
+            color: #ffffff;
             font-size: 12px;
             font-family: 'Helvetica Neue', sans-serif;
             font-weight: 500;
-            background-color: rgba(255, 255, 255, 0.1);
+            background: #1a1a1a;
             border-radius: 13%;
             width: 18px;
             height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 
+                inset 1px 1px 2px rgba(0, 0, 0, 0.8),
+                inset -1px -1px 2px rgba(50, 50, 50, 0.3);
         }
 
         .settings-button {
             -webkit-app-region: no-drag;
             padding: 5px;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.85);
-            transition: background 0.15s ease;
-            color: white;
+            background: #2a2a2a;
+            transition: all 0.2s ease;
+            color: #ffffff;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(60, 60, 60, 0.3);
         }
 
         .settings-button:hover {
-            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                4px 4px 8px rgba(0, 0, 0, 0.5),
+                -4px -4px 8px rgba(70, 70, 70, 0.4);
         }
 
         .settings-icon {
@@ -333,22 +340,25 @@ export class MainHeader extends LitElement {
             -webkit-app-region: no-drag;
             display: flex;
             align-items: center;
-            background: rgba(0, 0, 0, 0.2);
+            background: #1a1a1a;
             border-radius: 20px;
             padding: 4px 12px;
             margin: 0 8px;
             flex: 1;
             min-width: 300px;
             max-width: 500px;
+            box-shadow: 
+                inset 3px 3px 6px rgba(0, 0, 0, 0.8),
+                inset -3px -3px 6px rgba(50, 50, 50, 0.3);
         }
 
         .ask-input {
             -webkit-app-region: no-drag;
             flex: 1;
-            background: rgba(0, 0, 0, 0.85);
+            background: transparent;
             border: none;
             outline: none;
-            color: white;
+            color: #ffffff;
             font-size: 12px;
             font-family: 'Helvetica Neue', sans-serif;
             font-weight: 400;
@@ -358,26 +368,30 @@ export class MainHeader extends LitElement {
         }
 
         .ask-input::placeholder {
-            color: rgba(255, 255, 255, 1);
+            color: #888888;
         }
 
         .ask-submit-button {
             -webkit-app-region: no-drag;
-            background: rgba(0, 0, 0, 0.85);
+            background: #2a2a2a;
             border: none;
-            color: rgba(255, 255, 255, 1);
+            color: #ffffff;
             cursor: pointer;
-            padding: 2px 4px;
-            border-radius: 4px;
-            transition: background 0.15s ease, color 0.15s ease;
+            padding: 4px 6px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(60, 60, 60, 0.3);
         }
 
         .ask-submit-button:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 1);
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.5),
+                -3px -3px 6px rgba(70, 70, 70, 0.4);
         }
 
         .ask-submit-button:disabled {
@@ -393,7 +407,7 @@ export class MainHeader extends LitElement {
         /* Listen Button Styling */
         .listen-button {
             -webkit-app-region: no-drag;
-            background: rgba(0, 0, 0, 0.85);
+            background: #2a2a2a;
             border: none;
             border-radius: 50%;
             padding: 6px;
@@ -407,11 +421,16 @@ export class MainHeader extends LitElement {
             flex-shrink: 0;
             margin: 6px 0;
             box-sizing: border-box;
+            box-shadow: 
+                4px 4px 8px rgba(0, 0, 0, 0.4),
+                -4px -4px 8px rgba(60, 60, 60, 0.3);
         }
 
         .listen-button:hover {
-            background: rgba(255, 255, 255, 0.1);
             transform: scale(1.05);
+            box-shadow: 
+                6px 6px 12px rgba(0, 0, 0, 0.5),
+                -6px -6px 12px rgba(70, 70, 70, 0.4);
         }
 
         .listen-button img {
@@ -474,7 +493,7 @@ export class MainHeader extends LitElement {
 
         /* Shining text animation for loading state */
         .shining-text {
-            background: linear-gradient(110deg, #404040 0%, #404040 35%, #fff 50%, #404040 75%, #404040 100%);
+            background: linear-gradient(110deg, #666666 0%, #666666 35%, #ffffff 50%, #666666 75%, #666666 100%);
             background-size: 200% 100%;
             background-clip: text;
             -webkit-background-clip: text;
@@ -497,7 +516,7 @@ export class MainHeader extends LitElement {
 
         /* Recording state visual feedback */
         .recording-indicator {
-            background: linear-gradient(110deg, #ff4444 0%, #ff4444 35%, #ffaaaa 50%, #ff4444 75%, #ff4444 100%);
+            background: linear-gradient(110deg, #ff4444 0%, #ff4444 35%, #ff8888 50%, #ff4444 75%, #ff4444 100%);
             background-size: 200% 100%;
             background-clip: text;
             -webkit-background-clip: text;
@@ -510,8 +529,11 @@ export class MainHeader extends LitElement {
         }
 
         .ask-input-container.recording {
-            border: 1px solid rgba(255, 68, 68, 0.6);
-            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.5);
+            background: rgba(100, 20, 20, 0.3);
+            box-shadow: 
+                inset 2px 2px 4px rgba(255, 68, 68, 0.3),
+                inset -2px -2px 4px rgba(50, 50, 50, 0.3);
         }
 
         @keyframes recordingPulse {
@@ -1288,7 +1310,7 @@ export class MainHeader extends LitElement {
             'Tab': '⇥',
             'Escape': '⎋',
             'Up': '↑', 'Down': '↓', 'Left': '←', 'Right': '→',
-            '\\': html`<svg viewBox="0 0 6 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:6px; height:12px;"><path d="M1.5 1.3L5.1 10.6" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+            '\\': html`<svg viewBox="0 0 6 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:6px; height:12px;"><path d="M1.5 1.3L5.1 10.6" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
         };
 
         const keys = accelerator.split('+');
@@ -1413,7 +1435,7 @@ export class MainHeader extends LitElement {
                 >
                     <div class="settings-icon">
                         <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8.0013 3.16406C7.82449 3.16406 7.65492 3.2343 7.5299 3.35932C7.40487 3.48435 7.33464 3.65392 7.33464 3.83073C7.33464 4.00754 7.40487 4.17711 7.5299 4.30213C7.65492 4.42716 7.82449 4.4974 8.0013 4.4974C8.17811 4.4974 8.34768 4.42716 8.47271 4.30213C8.59773 4.17711 8.66797 4.00754 8.66797 3.83073C8.66797 3.65392 8.59773 3.48435 8.47271 3.35932C8.34768 3.2343 8.17811 3.16406 8.0013 3.16406ZM8.0013 7.83073C7.82449 7.83073 7.65492 7.90097 7.5299 8.02599C7.40487 8.15102 7.33464 8.32058 7.33464 8.4974C7.33464 8.67421 7.40487 8.84378 7.5299 8.9688C7.65492 9.09382 7.82449 9.16406 8.0013 9.16406C8.17811 9.16406 8.34768 9.09382 8.47271 8.9688C8.59773 8.84378 8.66797 8.67421 8.66797 8.4974C8.66797 8.32058 8.59773 8.15102 8.47271 8.02599C8.34768 7.90097 8.17811 7.83073 8.0013 7.83073ZM8.0013 12.4974C7.82449 12.4974 7.65492 12.5676 7.5299 12.6927C7.40487 12.8177 7.33464 12.9873 7.33464 13.1641C7.33464 13.3409 7.40487 13.5104 7.5299 13.6355C7.65492 13.7605 7.82449 13.8307 8.0013 13.8307C8.17811 13.8307 8.34768 13.7605 8.47271 13.6355C8.59773 13.5104 8.66797 13.3409 8.66797 13.1641C8.66797 12.9873 8.59773 12.8177 8.47271 12.6927C8.34768 12.5676 8.17811 12.4974 8.0013 12.4974Z" fill="white" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8.0013 3.16406C7.82449 3.16406 7.65492 3.2343 7.5299 3.35932C7.40487 3.48435 7.33464 3.65392 7.33464 3.83073C7.33464 4.00754 7.40487 4.17711 7.5299 4.30213C7.65492 4.42716 7.82449 4.4974 8.0013 4.4974C8.17811 4.4974 8.34768 4.42716 8.47271 4.30213C8.59773 4.17711 8.66797 4.00754 8.66797 3.83073C8.66797 3.65392 8.59773 3.48435 8.47271 3.35932C8.34768 3.2343 8.17811 3.16406 8.0013 3.16406ZM8.0013 7.83073C7.82449 7.83073 7.65492 7.90097 7.5299 8.02599C7.40487 8.15102 7.33464 8.32058 7.33464 8.4974C7.33464 8.67421 7.40487 8.84378 7.5299 8.9688C7.65492 9.09382 7.82449 9.16406 8.0013 9.16406C8.17811 9.16406 8.34768 9.09382 8.47271 8.9688C8.59773 8.84378 8.66797 8.67421 8.66797 8.4974C8.66797 8.32058 8.59773 8.15102 8.47271 8.02599C8.34768 7.90097 8.17811 7.83073 8.0013 7.83073ZM8.0013 12.4974C7.82449 12.4974 7.65492 12.5676 7.5299 12.6927C7.40487 12.8177 7.33464 12.9873 7.33464 13.1641C7.33464 13.3409 7.40487 13.5104 7.5299 13.6355C7.65492 13.7605 7.82449 13.8307 8.0013 13.8307C8.17811 13.8307 8.34768 13.7605 8.47271 13.6355C8.59773 13.5104 8.66797 13.3409 8.66797 13.1641C8.66797 12.9873 8.59773 12.8177 8.47271 12.6927C8.34768 12.5676 8.17811 12.4974 8.0013 12.4974Z" fill="#ffffff" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
                 </button>

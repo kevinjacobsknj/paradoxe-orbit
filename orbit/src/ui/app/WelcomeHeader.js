@@ -17,8 +17,7 @@ export class WelcomeHeader extends LitElement {
             box-sizing: border-box;
             height: auto;
             padding: 24px 16px;
-            background: rgba(0, 0, 0, 0.64);
-            box-shadow: 0px 0px 0px 1.5px rgba(255, 255, 255, 0.64) inset;
+            background: #2a2a2a;
             border-radius: 16px;
             flex-direction: column;
             justify-content: flex-start;
@@ -26,6 +25,11 @@ export class WelcomeHeader extends LitElement {
             gap: 32px;
             display: inline-flex;
             -webkit-app-region: drag;
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.4),
+                -8px -8px 16px rgba(255, 255, 255, 0.02),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.02),
+                inset -1px -1px 2px rgba(0, 0, 0, 0.3);
         }
         .close-button {
             -webkit-app-region: no-drag;
@@ -34,10 +38,10 @@ export class WelcomeHeader extends LitElement {
             right: 16px;
             width: 20px;
             height: 20px;
-            background: rgba(255, 255, 255, 0.1);
+            background: #1a1a1a;
             border: none;
             border-radius: 5px;
-            color: rgba(255, 255, 255, 0.7);
+            color: #ffffff;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -47,10 +51,14 @@ export class WelcomeHeader extends LitElement {
             font-size: 16px;
             line-height: 1;
             padding: 0;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
         .close-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                inset 1px 1px 2px rgba(0, 0, 0, 0.5),
+                inset -1px -1px 2px rgba(255, 255, 255, 0.02);
         }
         .header-section {
             flex-direction: column;
@@ -110,19 +118,23 @@ export class WelcomeHeader extends LitElement {
         .action-button {
             -webkit-app-region: no-drag;
             padding: 8px 10px;
-            background: rgba(132.6, 132.6, 132.6, 0.8);
-            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.16);
+            background: #1a1a1a;
             border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             justify-content: center;
             align-items: center;
             gap: 6px;
             display: flex;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(255, 255, 255, 0.02);
         }
         .action-button:hover {
-            background: rgba(150, 150, 150, 0.9);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
         .button-text {
             color: white;
@@ -188,7 +200,7 @@ export class WelcomeHeader extends LitElement {
             <div class="container">
                 <button class="close-button" @click=${this.handleClose}>×</button>
                 <div class="header-section">
-                    <div class="title">Welcome to Glass</div>
+                    <div class="title">Welcome to Paradoxe Orbit</div>
                     <div class="subtitle">Choose how to connect your AI model</div>
                 </div>
                 <div class="option-card">
@@ -196,7 +208,7 @@ export class WelcomeHeader extends LitElement {
                     <div class="option-content">
                         <div class="option-title">Quick start with default API key</div>
                         <div class="option-description">
-                            100% free with Pickle's OpenAI key<br/>No personal data collected<br/>Sign up with Google in seconds
+                            100% free with Paradoxe's OpenAI key<br/>No personal data collected<br/>Sign up with Google in seconds
                         </div>
                     </div>
                     <button class="action-button" @click=${this.loginCallback}>
@@ -218,7 +230,7 @@ export class WelcomeHeader extends LitElement {
                     </button>
                 </div>
                 <div class="footer">
-                    Glass does not collect your personal data —
+                    Paradoxe Orbit does not collect your personal data —
                     <span class="footer-link" @click=${this.openPrivacyPolicy}>See details</span>
                 </div>
             </div>
@@ -228,7 +240,7 @@ export class WelcomeHeader extends LitElement {
     openPrivacyPolicy() {
         console.log('🔊 openPrivacyPolicy WelcomeHeader');
         if (window.api?.common) {
-            window.api.common.openExternal('https://pickle.com/privacy-policy');
+            window.api.common.openExternal('https://paradoxe.ai/privacy-policy');
         }
     }
 }

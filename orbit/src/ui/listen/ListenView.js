@@ -42,15 +42,17 @@ export class ListenView extends LitElement {
 
 /* highlight.js 스타일 추가 */
 .insights-container pre {
-    background: rgba(0, 0, 0, 0.4) !important;
+    background: #1a1a1a !important;
     border-radius: 8px !important;
     padding: 12px !important;
     margin: 8px 0 !important;
     overflow-x: auto !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     white-space: pre !important;
     word-wrap: normal !important;
     word-break: normal !important;
+    box-shadow: 
+        inset 2px 2px 4px rgba(0, 0, 0, 0.4),
+        inset -2px -2px 4px rgba(255, 255, 255, 0.02) !important;
 }
 
 .insights-container code {
@@ -70,50 +72,50 @@ export class ListenView extends LitElement {
 }
 
 .insights-container p code {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: #333333 !important;
     padding: 2px 4px !important;
     border-radius: 3px !important;
-    color: #ffd700 !important;
+    color: #ff6b6b !important;
 }
 
 .hljs-keyword {
-    color: #ff79c6 !important;
+    color: #d73a49 !important;
 }
 
 .hljs-string {
-    color: #f1fa8c !important;
+    color: #032f62 !important;
 }
 
 .hljs-comment {
-    color: #6272a4 !important;
+    color: #6a737d !important;
 }
 
 .hljs-number {
-    color: #bd93f9 !important;
+    color: #005cc5 !important;
 }
 
 .hljs-function {
-    color: #50fa7b !important;
+    color: #6f42c1 !important;
 }
 
 .hljs-title {
-    color: #50fa7b !important;
+    color: #6f42c1 !important;
 }
 
 .hljs-variable {
-    color: #8be9fd !important;
+    color: #e36209 !important;
 }
 
 .hljs-built_in {
-    color: #ffb86c !important;
+    color: #005cc5 !important;
 }
 
 .hljs-attr {
-    color: #50fa7b !important;
+    color: #22863a !important;
 }
 
 .hljs-tag {
-    color: #ff79c6 !important;
+    color: #22863a !important;
 }
         .assistant-container {
             display: flex;
@@ -121,43 +123,25 @@ export class ListenView extends LitElement {
             color: #ffffff;
             box-sizing: border-box;
             position: relative;
-            background: rgba(0, 0, 0, 0.8);
+            background: #2a2a2a;
             overflow: hidden;
             border-radius: 12px;
             width: 100%;
             height: 100%;
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.4),
+                -8px -8px 16px rgba(255, 255, 255, 0.02),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.02),
+                inset -1px -1px 2px rgba(0, 0, 0, 0.3);
         }
 
 
         .assistant-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 12px;
-            padding: 1px;
-            background: linear-gradient(169deg, rgba(255, 255, 255, 0.17) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.17) 100%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: destination-out;
-            mask-composite: exclude;
-            pointer-events: none;
+            display: none;
         }
 
         .assistant-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            z-index: -1;
+            display: none;
         }
 
         .top-bar {
@@ -175,7 +159,7 @@ export class ListenView extends LitElement {
         }
 
         .bar-left-text {
-            color: white;
+            color: #ffffff;
             font-size: 13px;
             font-family: 'Helvetica Neue', sans-serif;
             font-weight: 500;
@@ -211,11 +195,10 @@ export class ListenView extends LitElement {
             display: flex;
             align-items: center;
             gap: 5px;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.9);
+            background: #1a1a1a;
+            color: #ffffff;
             border: none;
             outline: none;
-            box-shadow: none;
             padding: 4px 8px;
             border-radius: 5px;
             font-size: 11px;
@@ -223,12 +206,17 @@ export class ListenView extends LitElement {
             cursor: pointer;
             height: 24px;
             white-space: nowrap;
-            transition: background-color 0.15s ease;
+            transition: all 0.2s ease;
             justify-content: center;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .toggle-button:hover {
-            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .toggle-button svg {
@@ -238,11 +226,10 @@ export class ListenView extends LitElement {
         }
 
         .copy-button {
-            background: transparent;
-            color: rgba(255, 255, 255, 0.9);
+            background: #1a1a1a;
+            color: #ffffff;
             border: none;
             outline: none;
-            box-shadow: none;
             padding: 4px;
             border-radius: 3px;
             cursor: pointer;
@@ -252,13 +239,18 @@ export class ListenView extends LitElement {
             min-width: 24px;
             height: 24px;
             flex-shrink: 0;
-            transition: background-color 0.15s ease;
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .copy-button:hover {
-            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .copy-button svg {
@@ -287,7 +279,7 @@ export class ListenView extends LitElement {
         .timer {
             font-family: 'Monaco', 'Menlo', monospace;
             font-size: 10px;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.8);
         }
         
         /* ────────────────[ GLASS BYPASS ]─────────────── */

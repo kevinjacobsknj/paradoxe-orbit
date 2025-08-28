@@ -13,7 +13,7 @@ export class SettingsView extends LitElement {
             display: block;
             width: 240px;
             height: 100%;
-            color: white;
+            color: #ffffff;
         }
 
         .settings-container {
@@ -21,15 +21,18 @@ export class SettingsView extends LitElement {
             flex-direction: column;
             height: 100%;
             width: 100%;
-            background: rgba(20, 20, 20, 0.8);
+            background: #2a2a2a;
             border-radius: 12px;
-            outline: 0.5px rgba(255, 255, 255, 0.2) solid;
-            outline-offset: -1px;
             box-sizing: border-box;
             position: relative;
             overflow-y: auto;
             padding: 12px 12px;
             z-index: 1000;
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.4),
+                -8px -8px 16px rgba(60, 60, 60, 0.3),
+                inset 1px 1px 2px rgba(80, 80, 80, 0.3),
+                inset -1px -1px 2px rgba(0, 0, 0, 0.5);
         }
 
 
@@ -52,19 +55,7 @@ export class SettingsView extends LitElement {
         }
 
         .settings-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            filter: blur(10px);
-            z-index: -1;
+            display: none;
         }
             
         .settings-button[disabled],
@@ -94,7 +85,7 @@ export class SettingsView extends LitElement {
         .app-title {
             font-size: 13px;
             font-weight: 500;
-            color: white;
+            color: #ffffff;
             margin: 0 0 4px 0;
         }
 
@@ -133,7 +124,7 @@ export class SettingsView extends LitElement {
             justify-content: space-between;
             align-items: center;
             padding: 4px 0;
-            color: white;
+            color: #ffffff;
             font-size: 11px;
         }
 
@@ -148,7 +139,7 @@ export class SettingsView extends LitElement {
         }
 
         .cmd-key, .shortcut-key {
-            background: rgba(255, 255, 255, 0.1);
+            background: #1a1a1a;
             border-radius: 3px;
             width: 16px;
             height: 16px;
@@ -157,7 +148,10 @@ export class SettingsView extends LitElement {
             justify-content: center;
             font-size: 11px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
+            color: #ffffff;
+            box-shadow: 
+                inset 1px 1px 2px rgba(0, 0, 0, 0.8),
+                inset -1px -1px 2px rgba(50, 50, 50, 0.3);
         }
 
         /* Buttons Section */
@@ -173,28 +167,34 @@ export class SettingsView extends LitElement {
         }
 
         .settings-button {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            color: white;
+            background: #2a2a2a;
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
             padding: 5px 10px;
             font-size: 11px;
             font-weight: 400;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             white-space: nowrap;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(60, 60, 60, 0.3);
         }
 
         .settings-button:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                4px 4px 8px rgba(0, 0, 0, 0.5),
+                -4px -4px 8px rgba(70, 70, 70, 0.4);
         }
 
         .settings-button:active {
-            transform: translateY(1px);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.6),
+                inset -2px -2px 4px rgba(60, 60, 60, 0.3);
         }
 
         .settings-button.full-width {
@@ -228,18 +228,21 @@ export class SettingsView extends LitElement {
 
         .api-key-section input {
             width: 100%;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            border-radius: 4px;
-            padding: 4px;
+            background: #1a1a1a;
+            border: none;
+            color: #ffffff;
+            border-radius: 6px;
+            padding: 6px 8px;
             font-size: 11px;
             margin-bottom: 4px;
             box-sizing: border-box;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.8),
+                inset -2px -2px 4px rgba(50, 50, 50, 0.3);
         }
 
         .api-key-section input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+            color: #888888;
         }
 
         /* Preset Management Section */
@@ -258,7 +261,7 @@ export class SettingsView extends LitElement {
         .preset-title {
             font-size: 11px;
             font-weight: 500;
-            color: white;
+            color: #ffffff;
         }
 
         .preset-count {
@@ -272,12 +275,15 @@ export class SettingsView extends LitElement {
             color: rgba(255, 255, 255, 0.6);
             cursor: pointer;
             padding: 2px 4px;
-            border-radius: 2px;
-            transition: background-color 0.15s ease;
+            border-radius: 4px;
+            transition: all 0.2s ease;
         }
 
         .preset-toggle:hover {
             background: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                inset 1px 1px 2px rgba(0, 0, 0, 0.3),
+                inset -1px -1px 2px rgba(60, 60, 60, 0.2);
         }
 
         .preset-list {
@@ -293,27 +299,31 @@ export class SettingsView extends LitElement {
             justify-content: space-between;
             align-items: center;
             padding: 4px 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
+            background: #1a1a1a;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             font-size: 11px;
-            border: 1px solid transparent;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(50, 50, 50, 0.3);
         }
 
         .preset-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.5),
+                -3px -3px 6px rgba(60, 60, 60, 0.4);
         }
 
         .preset-item.selected {
-            background: rgba(0, 122, 255, 0.25);
-            border-color: rgba(0, 122, 255, 0.6);
-            box-shadow: 0 0 0 1px rgba(0, 122, 255, 0.3);
+            background: #2a3a4a;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 122, 255, 0.3),
+                inset -2px -2px 4px rgba(60, 60, 60, 0.3);
         }
 
         .preset-name {
-            color: white;
+            color: #ffffff;
             flex: 1;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -392,67 +402,110 @@ export class SettingsView extends LitElement {
             margin-left: 2px;
         }
         label > strong {
-            color: white;
+            color: #ffffff;
             font-weight: 600;
         }
         .provider-key-group input {
-            width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2);
-            color: white; border-radius: 4px; padding: 5px 8px; font-size: 11px; box-sizing: border-box;
+            width: 100%; 
+            background: #1a1a1a; 
+            border: none;
+            color: #ffffff; 
+            border-radius: 6px; 
+            padding: 6px 8px; 
+            font-size: 11px; 
+            box-sizing: border-box;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.8),
+                inset -2px -2px 4px rgba(50, 50, 50, 0.3);
         }
         .key-buttons { display: flex; gap: 4px; }
         .key-buttons .settings-button { flex: 1; padding: 4px; }
         .model-list {
-            display: flex; flex-direction: column; gap: 2px; max-height: 120px;
-            overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 4px;
-            padding: 4px; margin-top: 4px;
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+            max-height: 120px;
+            overflow-y: auto; 
+            background: #1a1a1a; 
+            border-radius: 8px;
+            padding: 6px; 
+            margin-top: 4px;
+            box-shadow: 
+                inset 3px 3px 6px rgba(0, 0, 0, 0.8),
+                inset -3px -3px 6px rgba(50, 50, 50, 0.3);
         }
         .model-item { 
             padding: 5px 8px; 
             font-size: 11px; 
-            border-radius: 3px; 
+            border-radius: 6px; 
             cursor: pointer; 
-            transition: background-color 0.15s; 
+            transition: all 0.2s ease; 
             display: flex; 
             justify-content: space-between; 
-            align-items: center; 
+            align-items: center;
+            background: #2a2a2a;
+            color: #ffffff;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(60, 60, 60, 0.3);
         }
-        .model-item:hover { background-color: rgba(255,255,255,0.1); }
-        .model-item.selected { background-color: rgba(0, 122, 255, 0.4); font-weight: 500; }
+        .model-item:hover { 
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.5),
+                -3px -3px 6px rgba(70, 70, 70, 0.4);
+        }
+        .model-item.selected { 
+            background: #2a3a4a; 
+            font-weight: 500;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 122, 255, 0.3),
+                inset -2px -2px 4px rgba(60, 60, 60, 0.3);
+        }
         .model-status { 
             font-size: 9px; 
-            color: rgba(255,255,255,0.6); 
+            color: rgba(255, 255, 255, 0.6); 
             margin-left: 8px; 
         }
-        .model-status.installed { color: rgba(0, 255, 0, 0.8); }
-        .model-status.not-installed { color: rgba(255, 200, 0, 0.8); }
+        .model-status.installed { color: #4CAF50; }
+        .model-status.not-installed { color: #FF9800; }
         .install-progress {
             flex: 1;
             height: 4px;
-            background: rgba(255,255,255,0.1);
+            background: #0a0a0a;
             border-radius: 2px;
             margin-left: 8px;
             overflow: hidden;
+            box-shadow: 
+                inset 1px 1px 2px rgba(0, 0, 0, 0.8),
+                inset -1px -1px 2px rgba(30, 30, 30, 0.3);
         }
         .install-progress-bar {
             height: 100%;
-            background: rgba(0, 122, 255, 0.8);
+            background: linear-gradient(90deg, #007AFF, #00A8FF);
             transition: width 0.3s ease;
         }
         
         /* Dropdown styles */
         select.model-dropdown {
-            background: rgba(0,0,0,0.2);
-            color: white;
+            background: #1a1a1a;
+            color: #ffffff;
             cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 11px;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.8),
+                inset -2px -2px 4px rgba(50, 50, 50, 0.3);
         }
         
         select.model-dropdown option {
-            background: #1a1a1a;
-            color: white;
+            background: #2a2a2a;
+            color: #ffffff;
         }
         
         select.model-dropdown option:disabled {
-            color: rgba(255,255,255,0.4);
+            color: rgba(255, 255, 255, 0.4);
         }
             
         /* ────────────────[ GLASS BYPASS ]─────────────── */

@@ -26,7 +26,8 @@ export class AskView extends LitElement {
             display: block;
             width: 100%;
             height: 100%;
-            color: white;
+            color: #ffffff;
+            background: #1a1a1a;
             transform: translate3d(0, 0, 0);
             backface-visibility: hidden;
             transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.2s ease-out;
@@ -118,31 +119,35 @@ export class AskView extends LitElement {
         }
 
         .response-container a:hover {
-            color: #FF6D00 !important;
+            color: #E33600 !important;
             text-decoration: underline !important;
         }
 
         .response-container a:visited {
-            color: #D84315 !important;
+            color: #CC3300 !important;
         }
 
         /* Inline back button styling */
         .response-container .inline-back-button {
-            background: rgba(255, 61, 0, 0.2) !important;
+            background: #ffffff !important;
             color: #FF3D00 !important;
-            border: 1px solid rgba(255, 61, 0, 0.5) !important;
+            border: none !important;
             padding: 8px 16px !important;
             border-radius: 8px !important;
             cursor: pointer !important;
             font-size: 13px !important;
             font-weight: 600 !important;
-            transition: all 0.15s ease !important;
+            transition: all 0.2s ease !important;
             user-select: none !important;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.08),
+                -3px -3px 6px rgba(255, 255, 255, 0.9) !important;
         }
 
         .response-container .inline-back-button:hover {
-            background: rgba(255, 61, 0, 0.3) !important;
-            border-color: rgba(255, 61, 0, 0.7) !important;
+            box-shadow: 
+                4px 4px 8px rgba(0, 0, 0, 0.1),
+                -4px -4px 8px rgba(255, 255, 255, 0.9) !important;
         }
 
         /* Mini Browser Interface */
@@ -152,40 +157,46 @@ export class AskView extends LitElement {
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: #1a1a1a;
+            background: #f8f8f8;
             z-index: 1000;
             display: flex;
             flex-direction: column;
         }
 
         .browser-header {
-            background: #000000;
+            background: #2a2a2a;
             padding: 8px 16px;
             display: flex;
             align-items: center;
             gap: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .browser-back-button {
-            background: #222222;
-            color: white;
+            background: #1a1a1a;
+            color: #ffffff;
             border: none;
             padding: 8px 16px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             outline: none;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(255, 255, 255, 0.02);
         }
 
         .browser-back-button:hover {
-            background: #333333;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .browser-back-button:focus {
@@ -200,8 +211,8 @@ export class AskView extends LitElement {
         }
 
         .browser-tab {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
+            background: #1a1a1a;
+            color: #cccccc;
             border: none;
             padding: 8px 16px;
             border-radius: 8px 8px 0 0;
@@ -214,21 +225,27 @@ export class AskView extends LitElement {
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
+            box-shadow: 
+                inset 1px 1px 2px rgba(0, 0, 0, 0.4),
+                inset -1px -1px 2px rgba(255, 255, 255, 0.02);
         }
 
         .browser-tab.active {
-            background: rgba(255, 61, 0, 0.2);
+            background: #2a2a2a;
             color: #FF3D00;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(255, 255, 255, 0.02);
             border-bottom: 2px solid #FF3D00;
         }
 
         .browser-tab:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: #333333;
         }
 
         .browser-tab.active:hover {
-            background: rgba(255, 61, 0, 0.3);
+            background: #2a2a2a;
         }
 
         .tab-close {
@@ -237,14 +254,15 @@ export class AskView extends LitElement {
             color: currentColor;
             cursor: pointer;
             padding: 2px;
-            border-radius: 2px;
+            border-radius: 4px;
             font-size: 14px;
             opacity: 0.7;
+            transition: all 0.15s ease;
         }
 
         .tab-close:hover {
             opacity: 1;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .browser-content {
@@ -255,31 +273,38 @@ export class AskView extends LitElement {
         }
 
         .browser-new-tab {
-            background: rgba(255, 61, 0, 0.1);
+            background: #1a1a1a;
             color: #FF3D00;
-            border: 1px dashed rgba(255, 61, 0, 0.3);
+            border: 1px dashed #FF3D00;
             padding: 6px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 18px;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .browser-new-tab:hover {
-            background: rgba(255, 61, 0, 0.2);
-            border-color: rgba(255, 61, 0, 0.5);
+            background: #333333;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .response-container pre {
-            background: rgba(0, 0, 0, 0.4) !important;
+            background: #1a1a1a !important;
             border-radius: 8px !important;
             padding: 12px !important;
             margin: 8px 0 !important;
             overflow-x: auto !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
             white-space: pre !important;
             word-wrap: normal !important;
             word-break: normal !important;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.4),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02) !important;
         }
 
         .response-container code {
@@ -299,41 +324,41 @@ export class AskView extends LitElement {
         }
 
         .response-container p code {
-            background: rgba(255, 255, 255, 0.1) !important;
+            background: #333333 !important;
             padding: 2px 4px !important;
             border-radius: 3px !important;
-            color: #ffd700 !important;
+            color: #ff6b6b !important;
         }
 
         .hljs-keyword {
-            color: #ff79c6 !important;
+            color: #d73a49 !important;
         }
         .hljs-string {
-            color: #f1fa8c !important;
+            color: #032f62 !important;
         }
         .hljs-comment {
-            color: #6272a4 !important;
+            color: #6a737d !important;
         }
         .hljs-number {
-            color: #bd93f9 !important;
+            color: #005cc5 !important;
         }
         .hljs-function {
-            color: #50fa7b !important;
+            color: #6f42c1 !important;
         }
         .hljs-variable {
-            color: #8be9fd !important;
+            color: #e36209 !important;
         }
         .hljs-built_in {
-            color: #ffb86c !important;
+            color: #005cc5 !important;
         }
         .hljs-title {
-            color: #50fa7b !important;
+            color: #6f42c1 !important;
         }
         .hljs-attr {
-            color: #50fa7b !important;
+            color: #22863a !important;
         }
         .hljs-tag {
-            color: #ff79c6 !important;
+            color: #22863a !important;
         }
 
         .ask-container {
@@ -341,13 +366,16 @@ export class AskView extends LitElement {
             flex-direction: column;
             height: 100%;
             width: 100%;
-            background: #000000;
+            background: #2a2a2a;
             border-radius: 12px;
-            outline: 0.5px #333333 solid;
-            outline-offset: -1px;
             box-sizing: border-box;
             position: relative;
             overflow: hidden;
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.4),
+                -8px -8px 16px rgba(255, 255, 255, 0.02),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.02),
+                inset -1px -1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .ask-container::before {
@@ -378,24 +406,27 @@ export class AskView extends LitElement {
         .response-icon {
             width: 20px;
             height: 20px;
-            background: rgba(255, 255, 255, 0.2);
+            background: #1a1a1a;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .response-icon svg {
             width: 12px;
             height: 12px;
-            stroke: rgba(255, 255, 255, 0.9);
+            stroke: #ffffff;
         }
 
         .response-label {
             font-size: 13px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
+            color: #ffffff;
             white-space: nowrap;
             position: relative;
             overflow: hidden;
@@ -430,7 +461,7 @@ export class AskView extends LitElement {
 
         .question-text {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
+            color: #cccccc;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -446,11 +477,11 @@ export class AskView extends LitElement {
         }
 
         .copy-button {
-            background: transparent;
-            color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #1a1a1a;
+            color: #ffffff;
+            border: none;
             padding: 4px;
-            border-radius: 3px;
+            border-radius: 6px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -458,13 +489,18 @@ export class AskView extends LitElement {
             min-width: 24px;
             height: 24px;
             flex-shrink: 0;
-            transition: background-color 0.15s ease;
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .copy-button:hover {
-            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .copy-button svg {
@@ -491,8 +527,8 @@ export class AskView extends LitElement {
         }
 
         .back-button {
-            background: #222222;
-            color: white;
+            background: #1a1a1a;
+            color: #ffffff;
             border: none;
             padding: 8px 16px;
             border-radius: 8px;
@@ -502,13 +538,17 @@ export class AskView extends LitElement {
             gap: 8px;
             font-size: 13px;
             font-weight: 600;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             outline: none;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(255, 255, 255, 0.02);
         }
 
         .back-button:hover {
-            background: #333333;
-            color: white;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .back-button:focus {
@@ -520,25 +560,27 @@ export class AskView extends LitElement {
         }
 
         .close-button {
-            background: rgba(255, 255, 255, 0.07);
-            color: white;
+            background: #1a1a1a;
+            color: #ffffff;
             border: none;
             padding: 4px;
-            border-radius: 20px;
-            outline: 1px rgba(255, 255, 255, 0.3) solid;
-            outline-offset: -1px;
-            backdrop-filter: blur(0.5px);
+            border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
         }
 
         .close-button:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 1);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .response-container {
@@ -565,8 +607,8 @@ export class AskView extends LitElement {
         .response-container h1 img,
         .response-container h2 img,
         .response-container h3 img {
-            width: 32px;
-            height: 32px;
+            width: 18px;
+            height: 18px;
             object-fit: contain;
             vertical-align: middle;
             display: inline-block;
@@ -622,21 +664,21 @@ export class AskView extends LitElement {
             left: 0%;
             top: 0%;
             animation: rotate-one 1s linear infinite;
-            border-bottom: 3px solid rgba(255, 255, 255, 0.9);
+            border-bottom: 3px solid rgba(0, 0, 0, 0.6);
         }
 
         .orbit-inner.two {
             right: 0%;
             top: 0%;
             animation: rotate-two 1s linear infinite;
-            border-right: 3px solid rgba(255, 255, 255, 0.9);
+            border-right: 3px solid rgba(0, 0, 0, 0.6);
         }
 
         .orbit-inner.three {
             right: 0%;
             bottom: 0%;
             animation: rotate-three 1s linear infinite;
-            border-top: 3px solid rgba(255, 255, 255, 0.9);
+            border-top: 3px solid rgba(0, 0, 0, 0.6);
         }
 
         @keyframes rotate-one {
@@ -674,64 +716,13 @@ export class AskView extends LitElement {
         }
 
         .response-line:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.1);
             border-radius: 4px;
         }
 
-        /* Replace lightning emoji with spinning logo for loading text */
-        .response-container em {
-            position: relative;
-        }
-
-        /* Target em elements that contain the lightning bolt (loading indicator) */
-        .response-container em:has-text("⚡"):before,
-        .response-container em:contains("⚡"):before {
-            content: '';
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            background-image: url('../../../public/assets/logoloading.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            animation: spin 1.5s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        /* Style em elements that contain "Generating enhanced sections" */
+        /* Style em elements */
         .response-container em {
             font-style: italic;
-        }
-
-        /* Special styling for what appears to be loading text (last em in last p) */
-        .response-container p:last-child em:last-child {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .response-container p:last-child em:last-child:before {
-            content: '';
-            width: 20px;
-            height: 20px;
-            background-image: url('../../../public/assets/logoloading.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            animation: spin 1.5s linear infinite;
-            flex-shrink: 0;
-        }
-
-        /* Hide the first character (lightning emoji) using text indent */
-        .response-container p:last-child em:last-child {
-            text-indent: -1.2em;
-            padding-left: 1.5em;
         }
 
         .loading-enhanced {
@@ -741,38 +732,8 @@ export class AskView extends LitElement {
             padding: 24px;
             border-radius: 8px;
             margin: 16px 0;
-            border: 1px solid #333333;
-            background: #000000;
-        }
-
-        .loading-logo-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 16px 0;
-            background: none;
-            border: none;
-            padding: 0;
-        }
-
-        .loading-logo {
-            width: 60px;
-            height: 60px;
-            background-image: url('../../../public/assets/logoloading.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            animation: spin 1.5s linear infinite;
-            flex-shrink: 0;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            border: 1px solid #666666;
+            background: #1a1a1a;
         }
 
         .line-copy-button {
@@ -817,7 +778,7 @@ export class AskView extends LitElement {
             align-items: center;
             gap: 8px;
             padding: 12px 16px;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             flex-shrink: 0;
             transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
@@ -840,7 +801,7 @@ export class AskView extends LitElement {
         #textInput {
             flex: 1;
             padding: 10px 14px;
-            background: rgba(0, 0, 0, 0.2);
+            background: #1a1a1a;
             border-radius: 20px;
             outline: none;
             border: none;
@@ -848,6 +809,9 @@ export class AskView extends LitElement {
             font-size: 14px;
             font-family: 'Helvetica Neue', sans-serif;
             font-weight: 400;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.4),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         #textInput::placeholder {
@@ -864,7 +828,7 @@ export class AskView extends LitElement {
         .response-line h4,
         .response-line h5,
         .response-line h6 {
-            color: rgba(255, 255, 255, 0.95);
+            color: #ffffff;
             margin: 16px 0 8px 0;
             font-weight: 600;
             display: flex;
@@ -875,15 +839,15 @@ export class AskView extends LitElement {
         .response-line h1 img,
         .response-line h2 img,
         .response-line h3 img {
-            width: 32px;
-            height: 32px;
+            width: 18px;
+            height: 18px;
             object-fit: contain;
             vertical-align: middle;
         }
 
         .response-line p {
             margin: 8px 0;
-            color: rgba(255, 255, 255, 0.9);
+            color: #ffffff;
         }
 
         .response-line ul,
@@ -894,7 +858,7 @@ export class AskView extends LitElement {
 
         .response-line li {
             margin: 4px 0;
-            color: rgba(255, 255, 255, 0.9);
+            color: #ffffff;
         }
 
         .response-line code {
@@ -934,9 +898,109 @@ export class AskView extends LitElement {
             align-items: center;
             justify-content: center;
             height: 100%;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
         }
+
+        /* Enhanced Response Tabs in Header */
+        #tabsContainer {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .enhanced-tabs-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .enhanced-tabs-header {
+            display: flex;
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 4px;
+            gap: 2px;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
+        }
+
+        .enhanced-tab {
+            flex: 1;
+            background: #2a2a2a;
+            color: #cccccc;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 24px;
+            white-space: nowrap;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(255, 255, 255, 0.02);
+        }
+
+        .tab-logo {
+            width: 12px;
+            height: 12px;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+
+        .enhanced-tab:hover {
+            color: #ffffff;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.5),
+                -3px -3px 6px rgba(255, 255, 255, 0.02);
+            transform: translateY(-1px);
+        }
+
+        .enhanced-tab.active {
+            background: #333333;
+            color: #ffffff;
+            box-shadow: 
+                inset 3px 3px 6px rgba(0, 0, 0, 0.5),
+                inset -3px -3px 6px rgba(255, 255, 255, 0.02);
+            transform: none;
+        }
+
+        /* Animation for enhanced tabs appearing */
+        .enhanced-tab.tab-enter {
+            opacity: 0;
+            transform: translateX(-20px) scale(0.8);
+            animation: tabSlideIn 0.4s ease-out forwards;
+        }
+
+        @keyframes tabSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px) scale(0.8);
+            }
+            60% {
+                opacity: 0.8;
+                transform: translateX(2px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        /* Stagger animation delays for multiple tabs */
+        .enhanced-tab.tab-enter:nth-child(1) { animation-delay: 0ms; }
+        .enhanced-tab.tab-enter:nth-child(2) { animation-delay: 100ms; }
+        .enhanced-tab.tab-enter:nth-child(3) { animation-delay: 200ms; }
+        .enhanced-tab.tab-enter:nth-child(4) { animation-delay: 300ms; }
+        .enhanced-tab.tab-enter:nth-child(5) { animation-delay: 400ms; }
+
 
         .btn-gap {
             display: flex;
@@ -1065,6 +1129,8 @@ export class AskView extends LitElement {
         this.originalContent = '';
         this.browserTabs = [];
         this.activeTabIndex = 0;
+        this.enhancedSections = null;
+        this.currentActiveTab = null;
 
         this.marked = null;
         this.hljs = null;
@@ -1308,6 +1374,157 @@ export class AskView extends LitElement {
         }
     }
 
+    switchEnhancedTab(tabName, event) {
+        if (event) {
+            event.stopPropagation();
+        }
+        
+        if (!this.enhancedSections) return;
+        
+        // Update active tab
+        const tabs = this.shadowRoot.querySelectorAll('.enhanced-tab');
+        tabs.forEach(tab => {
+            if (tab.dataset.tab === tabName) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+
+        // Update response container content based on selected tab
+        const responseContainer = this.shadowRoot.getElementById('responseContainer');
+        if (responseContainer) {
+            let content = '';
+            switch (tabName) {
+                case 'paradoxe':
+                    content = `<div class="main-response">${this.renderMarkdownSection(this.enhancedSections.main)}</div>`;
+                    break;
+                case 'overview':
+                    content = this.renderMarkdownSection(this.enhancedSections.overview);
+                    break;
+                case 'wikipedia':
+                    content = this.renderMarkdownSection(this.enhancedSections.wikipedia);
+                    break;
+                case 'reddit':
+                    content = this.renderMarkdownSection(this.enhancedSections.reddit);
+                    break;
+                case 'tldr':
+                    content = this.renderMarkdownSection(this.enhancedSections.tldr);
+                    break;
+                default:
+                    content = `<div class="main-response">${this.renderMarkdownSection(this.enhancedSections.main)}</div>`;
+            }
+            responseContainer.innerHTML = content;
+            
+            // Apply syntax highlighting
+            if (this.hljs) {
+                responseContainer.querySelectorAll('pre code').forEach(block => {
+                    if (!block.hasAttribute('data-highlighted')) {
+                        this.hljs.highlightElement(block);
+                        block.setAttribute('data-highlighted', 'true');
+                    }
+                });
+            }
+            
+            // Add link handlers
+            responseContainer.querySelectorAll('a').forEach(link => {
+                if (!link.hasAttribute('data-nav-handled')) {
+                    const originalHref = link.href;
+                    link.setAttribute('data-original-href', originalHref);
+                    
+                    link.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.handleLinkClick(event);
+                    });
+                    
+                    link.setAttribute('data-nav-handled', 'true');
+                }
+            });
+        }
+        
+        this.currentActiveTab = tabName;
+    }
+
+    parseEnhancedResponse(response) {
+        const sections = {
+            main: '',
+            overview: '',
+            wikipedia: '',
+            reddit: '',
+            tldr: ''
+        };
+
+        // Split response by sections
+        const parts = response.split(/^## (AI Overview|Wikipedia|Community Discussions|TL;DR)/gm);
+        
+        // First part is the main response
+        sections.main = parts[0] ? parts[0].trim() : '';
+        
+        // Parse sections
+        for (let i = 1; i < parts.length; i += 2) {
+            const sectionName = parts[i];
+            const content = parts[i + 1] || '';
+            
+            switch (sectionName) {
+                case 'AI Overview':
+                    sections.overview = content.trim();
+                    break;
+                case 'Wikipedia':
+                    sections.wikipedia = content.trim();
+                    break;
+                case 'Community Discussions':
+                    sections.reddit = content.trim();
+                    break;
+                case 'TL;DR':
+                    sections.tldr = content.trim();
+                    break;
+            }
+        }
+
+        return sections;
+    }
+
+    renderMarkdownSection(content) {
+        if (!content) return '';
+        
+        if (this.isLibrariesLoaded && this.marked && this.DOMPurify) {
+            try {
+                const parsedHtml = this.marked.parse(content);
+                console.log('Parsed HTML:', parsedHtml); // Debug log
+                const sanitized = this.DOMPurify.sanitize(parsedHtml, {
+                    ALLOWED_TAGS: [
+                        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'b', 'em', 'i',
+                        'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'a', 'img', 'table', 'thead',
+                        'tbody', 'tr', 'th', 'td', 'hr', 'sup', 'sub', 'del', 'ins', 'div', 'span',
+                    ],
+                    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'target', 'rel', 'style', 'width', 'height'],
+                    ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp|file):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+                });
+                console.log('Sanitized HTML:', sanitized); // Debug log
+                return sanitized;
+            } catch (error) {
+                console.error('Error rendering markdown section:', error);
+                return content;
+            }
+        } else {
+            console.log('Libraries not loaded, using fallback for:', content); // Debug log
+            // Basic text processing fallback with link support
+            const processed = content
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>') // Process markdown links
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>');
+            console.log('Fallback processed:', processed); // Debug log
+            return processed;
+        }
+    }
+
     fixIncompleteCodeBlocks(text) {
         if (!text) return text;
 
@@ -1388,30 +1605,97 @@ export class AskView extends LitElement {
 
     renderStreamingMarkdown(responseContainer) {
         try {
-            // 파서가 없거나 컨테이너가 변경되었으면 새로 생성
-            if (!this.smdParser || this.smdContainer !== responseContainer) {
-                this.smdContainer = responseContainer;
-                this.smdContainer.innerHTML = '';
-                
-                // smd.js의 default_renderer 사용
-                const renderer = default_renderer(this.smdContainer);
-                this.smdParser = parser(renderer);
-                this.lastProcessedLength = 0;
-            }
-
-            // 새로운 텍스트만 처리 (스트리밍 최적화)
             const currentText = this.currentResponse;
-            const newText = currentText.slice(this.lastProcessedLength);
             
-            if (newText.length > 0) {
-                // 새로운 텍스트 청크를 파서에 전달
-                parser_write(this.smdParser, newText);
-                this.lastProcessedLength = currentText.length;
-            }
+            // Check if this is an enhanced response with sections
+            const hasEnhancedSections = currentText.includes('## AI Overview') || 
+                                      currentText.includes('## Wikipedia') || 
+                                      currentText.includes('## Community Discussions') || 
+                                      currentText.includes('## TL;DR');
 
-            // 스트리밍이 완료되면 파서 종료
-            if (!this.isStreaming && !this.isLoading) {
-                parser_end(this.smdParser);
+            if (hasEnhancedSections && (!this.isStreaming && !this.isLoading)) {
+                // Parse enhanced response into sections
+                const sections = this.parseEnhancedResponse(currentText);
+                
+                // Store sections for later use
+                this.enhancedSections = sections;
+                this.currentActiveTab = 'paradoxe';
+                
+                // Populate response container with main content initially
+                responseContainer.innerHTML = `<div class="main-response">${this.renderMarkdownSection(sections.main)}</div>`;
+                
+                // Populate tabs in header
+                const tabsContainer = this.shadowRoot?.querySelector('#tabsContainer');
+                if (tabsContainer) {
+                    tabsContainer.innerHTML = `
+                        <div class="enhanced-tabs-header">
+                            <button class="enhanced-tab active" data-tab="paradoxe">
+                                <img src="../assets/logomain.png" alt="Paradoxe" class="tab-logo">
+                                Paradoxe
+                            </button>
+                            ${sections.overview ? `<button class="enhanced-tab tab-enter" data-tab="overview">Overview</button>` : ''}
+                            ${sections.wikipedia ? `<button class="enhanced-tab tab-enter" data-tab="wikipedia">Wiki</button>` : ''}
+                            ${sections.reddit ? `<button class="enhanced-tab tab-enter" data-tab="reddit">Community</button>` : ''}
+                            ${sections.tldr ? `<button class="enhanced-tab tab-enter" data-tab="tldr">TL;DR</button>` : ''}
+                        </div>
+                    `;
+                    
+                    // Add click handlers to tabs and trigger animation
+                    tabsContainer.querySelectorAll('.enhanced-tab').forEach((tab, index) => {
+                        tab.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.switchEnhancedTab(tab.dataset.tab);
+                        });
+                    });
+                    
+                    // Remove animation classes after animation completes
+                    setTimeout(() => {
+                        tabsContainer.querySelectorAll('.enhanced-tab.tab-enter').forEach(tab => {
+                            tab.classList.remove('tab-enter');
+                        });
+                    }, 800); // Wait for all animations to complete (400ms + 400ms delay)
+                }
+            } else {
+                // Show Paradoxe tab even for non-enhanced responses
+                const tabsContainer = this.shadowRoot?.querySelector('#tabsContainer');
+                if (tabsContainer) {
+                    tabsContainer.innerHTML = `
+                        <div class="enhanced-tabs-header">
+                            <button class="enhanced-tab active" data-tab="paradoxe">
+                                <img src="../assets/logomain.png" alt="Paradoxe" class="tab-logo">
+                                Paradoxe
+                            </button>
+                        </div>
+                    `;
+                }
+                this.enhancedSections = null;
+                this.currentActiveTab = 'paradoxe';
+                // Use normal streaming markdown rendering
+                // 파서가 없거나 컨테이너가 변경되었으면 새로 생성
+                if (!this.smdParser || this.smdContainer !== responseContainer) {
+                    this.smdContainer = responseContainer;
+                    this.smdContainer.innerHTML = '';
+                    
+                    // smd.js의 default_renderer 사용
+                    const renderer = default_renderer(this.smdContainer);
+                    this.smdParser = parser(renderer);
+                    this.lastProcessedLength = 0;
+                }
+
+                // 새로운 텍스트만 처리 (스트리밍 최적화)
+                const newText = currentText.slice(this.lastProcessedLength);
+                
+                if (newText.length > 0) {
+                    // 새로운 텍스트 청크를 파서에 전달
+                    parser_write(this.smdParser, newText);
+                    this.lastProcessedLength = currentText.length;
+                }
+
+                // 스트리밍이 완료되면 파서 종료
+                if (!this.isStreaming && !this.isLoading) {
+                    parser_end(this.smdParser);
+                }
             }
 
             // 코드 하이라이팅 적용
@@ -1427,10 +1711,8 @@ export class AskView extends LitElement {
             // Add link click handlers for simple navigation with stronger interception
             responseContainer.querySelectorAll('a').forEach(link => {
                 if (!link.hasAttribute('data-nav-handled')) {
-                    // Remove any existing href to prevent default navigation
+                    // Keep the href for styling but prevent default navigation with click handler
                     const originalHref = link.href;
-                    link.removeAttribute('href');
-                    link.style.cursor = 'pointer';
                     
                     // Store original URL as data attribute
                     link.setAttribute('data-original-href', originalHref);
@@ -1441,9 +1723,7 @@ export class AskView extends LitElement {
                         event.stopPropagation();
                         console.log('[AskView] Link intercepted:', originalHref);
                         
-                        // Simulate the link object for handleLinkClick
-                        const mockLink = { href: originalHref };
-                        event.target.closest('a').href = originalHref; // Temporarily restore for handler
+                        // Call handleLinkClick with the event
                         this.handleLinkClick(event);
                     });
                     
@@ -1777,8 +2057,10 @@ export class AskView extends LitElement {
                                 Back to Chat
                             </button>
                         ` : html`
-                            <img src="../assets/logomain.png" alt="Glass" style="width: 18px; height: 18px; object-fit: contain; margin-right: 8px;">
-                            <span class="response-label">${headerText}</span>
+                            <!-- Enhanced Response Tabs in Header -->
+                            <div id="tabsContainer">
+                                <!-- Tabs will be dynamically inserted here -->
+                            </div>
                         `}
                     </div>
                     <div class="header-right">

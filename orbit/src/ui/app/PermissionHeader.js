@@ -30,13 +30,18 @@ export class PermissionHeader extends LitElement {
             width: 285px;
             /* height is now set dynamically */
             padding: 18px 20px;
-            background: rgba(0, 0, 0, 0.3);
+            background: #2a2a2a;
             border-radius: 16px;
             overflow: hidden;
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
+            box-shadow: 
+                8px 8px 16px rgba(0, 0, 0, 0.4),
+                -8px -8px 16px rgba(255, 255, 255, 0.02),
+                inset 1px 1px 2px rgba(255, 255, 255, 0.02),
+                inset -1px -1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .container::after {
@@ -62,10 +67,10 @@ export class PermissionHeader extends LitElement {
             right: 10px;
             width: 14px;
             height: 14px;
-            background: rgba(255, 255, 255, 0.1);
+            background: #1a1a1a;
             border: none;
             border-radius: 3px;
-            color: rgba(255, 255, 255, 0.7);
+            color: #ffffff;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -75,11 +80,15 @@ export class PermissionHeader extends LitElement {
             font-size: 14px;
             line-height: 1;
             padding: 0;
+            box-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.4),
+                -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .close-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                inset 1px 1px 2px rgba(0, 0, 0, 0.5),
+                inset -1px -1px 2px rgba(255, 255, 255, 0.02);
         }
 
         .close-button:active {
@@ -156,17 +165,20 @@ export class PermissionHeader extends LitElement {
             -webkit-app-region: no-drag;
             width: 100%;
             height: 34px;
-            background: rgba(255, 255, 255, 0.2);
+            background: #1a1a1a;
             border: none;
             border-radius: 10px;
             color: white;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.15s ease;
+            transition: all 0.15s ease;
             position: relative;
             overflow: hidden;
             margin-bottom: 6px;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(255, 255, 255, 0.02);
         }
 
         .action-button::after {
@@ -186,7 +198,9 @@ export class PermissionHeader extends LitElement {
         }
 
         .action-button:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.02);
         }
 
         .action-button:disabled {
@@ -198,17 +212,20 @@ export class PermissionHeader extends LitElement {
             -webkit-app-region: no-drag;
             width: 100%;
             height: 34px;
-            background: rgba(34, 197, 94, 0.8);
+            background: #22c55e;
             border: none;
             border-radius: 10px;
             color: white;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.15s ease;
+            transition: all 0.15s ease;
             position: relative;
             overflow: hidden;
             margin-top: 4px;
+            box-shadow: 
+                3px 3px 6px rgba(0, 0, 0, 0.4),
+                -3px -3px 6px rgba(255, 255, 255, 0.02);
         }
 
         .continue-button::after {
@@ -228,12 +245,17 @@ export class PermissionHeader extends LitElement {
         }
 
         .continue-button:hover:not(:disabled) {
-            background: rgba(34, 197, 94, 0.9);
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.3),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.1);
         }
 
         .continue-button:disabled {
-            background: rgba(255, 255, 255, 0.2);
+            background: #1a1a1a;
             cursor: not-allowed;
+            box-shadow: 
+                inset 1px 1px 2px rgba(0, 0, 0, 0.3),
+                inset -1px -1px 2px rgba(255, 255, 255, 0.01);
         }
         
         /* ────────────────[ GLASS BYPASS ]─────────────── */
@@ -574,7 +596,7 @@ export class PermissionHeader extends LitElement {
                             class="continue-button" 
                             @click=${this.handleContinue}
                         >
-                            Continue to Pickle Glass
+                            Continue to Paradoxe Orbit
                         </button>
                     `}
                 </div>
