@@ -4,6 +4,7 @@ const { createLLM } = require('../../common/ai/factory');
 const sessionRepository = require('../../common/repositories/session');
 const summaryRepository = require('./repositories');
 const modelStateService = require('../../common/services/modelStateService');
+// const costOptimizedLLM = require('../../common/services/CostOptimizedLLM');
 
 class SummaryService {
     constructor() {
@@ -98,20 +99,8 @@ Please build upon this context while analyzing the new conversation segments.
                 await sessionRepository.touch(this.currentSessionId);
             }
 
-            const modelInfo = await modelStateService.getCurrentModelInfo('llm');
-            if (!modelInfo || !modelInfo.apiKey) {
-                throw new Error('AI model or API key is not configured.');
-            }
-            console.log(`🤖 Sending analysis request to ${modelInfo.provider} using model ${modelInfo.model}`);
-            
-            const messages = [
-                {
-                    role: 'system',
-                    content: systemPrompt,
-                },
-                {
-                    role: 'user',
-                    content: `${contextualPrompt}
+            // Try cost-optimized LLM first
+            const userQuery = `${contextualPrompt}
 
 Analyze the conversation and provide a structured summary. Format your response as follows:
 
@@ -131,55 +120,83 @@ Provide 2-3 sentences explaining the context and implications.
 2. Second follow-up question?
 3. Third follow-up question?
 
-Keep all points concise and build upon previous analysis if provided.`,
-                },
-            ];
+Keep all points concise and build upon previous analysis if provided.`;
 
-            console.log('🤖 Sending analysis request to AI...');
-
-            const llm = createLLM(modelInfo.provider, {
-                apiKey: modelInfo.apiKey,
-                model: modelInfo.model,
-                temperature: 0.7,
-                maxTokens: 1024,
-                usePortkey: modelInfo.provider === 'openai-orbit',
-                portkeyVirtualKey: modelInfo.provider === 'openai-orbit' ? modelInfo.apiKey : undefined,
-            });
-
-            const completion = await llm.chat(messages);
-
-            const responseText = completion.content;
-            console.log(`✅ Analysis response received: ${responseText}`);
-            const structuredData = this.parseResponseText(responseText, this.previousAnalysisResult);
-
-            if (this.currentSessionId) {
+            try {
+                // Get user tier from settings
+                let userTier = 'starter';
                 try {
-                    summaryRepository.saveSummary({
-                        sessionId: this.currentSessionId,
-                        text: responseText,
-                        tldr: structuredData.summary.join('\n'),
-                        bullet_json: JSON.stringify(structuredData.topic.bullets),
-                        action_json: JSON.stringify(structuredData.actions),
-                        model: modelInfo.model
-                    });
-                } catch (err) {
-                    console.error('[DB] Failed to save summary:', err);
+                    const settingsService = require('../../settings/settingsService');
+                    const settings = await settingsService.getSettings();
+                    userTier = settings.userTier || 'starter';
+                } catch (error) {
+                    console.log(`[SummaryService] Could not load user tier, using default: ${userTier}`);
                 }
+
+                // const optimizedResponse = await costOptimizedLLM.processQuery({
+                //     query: userQuery,
+                //     userId: 'current_user', // TODO: Get actual user ID
+                //     userTier,
+                //     // qualityMode will be auto-detected (summary analysis typically uses fast mode)
+                //     messageHistory: [], // Fresh analysis context
+                //     context: { 
+                //         analysisType: 'conversation_summary',
+                //         conversationLength: conversationTexts.length 
+                //     }
+                // });
+
+                // Temporarily use direct LLM call instead of cost-optimized service
+                const modelInfo = await modelStateService.getCurrentModelInfo('llm');
+                if (!modelInfo || !modelInfo.apiKey) {
+                    throw new Error('AI model or API key not configured for summary service.');
+                }
+
+                const llm = createLLM(modelInfo.provider, {
+                    apiKey: modelInfo.apiKey,
+                    model: modelInfo.model
+                });
+
+                const result = await llm.generateContent([systemPrompt, userQuery]);
+                const responseText = result.response.text();
+
+                // if (optimizedResponse.success && !optimizedResponse.error) {
+                //     console.log(`🤖 Cost-optimized summary response using ${optimizedResponse.usage?.modelUsed}`);
+                //     const responseText = optimizedResponse.content;
+                    console.log(`✅ Analysis response received: ${responseText}`);
+                    const structuredData = this.parseResponseText(responseText, this.previousAnalysisResult);
+
+                    if (this.currentSessionId) {
+                        try {
+                            summaryRepository.saveSummary({
+                                sessionId: this.currentSessionId,
+                                text: responseText,
+                                tldr: structuredData.summary.join('\n'),
+                                bullet_json: JSON.stringify(structuredData.topic.bullets),
+                                action_json: JSON.stringify(structuredData.actions),
+                                model: modelInfo.model || 'unknown'
+                            });
+                        } catch (err) {
+                            console.error('[DB] Failed to save summary:', err);
+                        }
+                    }
+
+                    // Store analysis result
+                    this.previousAnalysisResult = structuredData;
+                    this.analysisHistory.push({
+                        timestamp: Date.now(),
+                        data: structuredData,
+                        conversationLength: conversationTexts.length,
+                    });
+
+                    if (this.analysisHistory.length > 10) {
+                        this.analysisHistory.shift();
+                    }
+
+                    return structuredData;
+            } catch (error) {
+                console.error(`[SummaryService] Error during analysis:`, error);
+                throw error;
             }
-
-            // 분석 결과 저장
-            this.previousAnalysisResult = structuredData;
-            this.analysisHistory.push({
-                timestamp: Date.now(),
-                data: structuredData,
-                conversationLength: conversationTexts.length,
-            });
-
-            if (this.analysisHistory.length > 10) {
-                this.analysisHistory.shift();
-            }
-
-            return structuredData;
         } catch (error) {
             console.error('❌ Error during analysis generation:', error.message);
             return this.previousAnalysisResult; // 에러 시 이전 결과 반환
@@ -191,7 +208,7 @@ Keep all points concise and build upon previous analysis if provided.`,
             summary: [],
             topic: { header: '', bullets: [] },
             actions: [],
-            followUps: ['✉️ Draft a follow-up email', '✅ Generate action items', '📝 Show summary'],
+            followUps: ['Draft a follow-up email', 'Generate action items', 'Show summary'],
         };
 
         // 이전 결과가 있으면 기본값으로 사용
@@ -259,13 +276,13 @@ Keep all points concise and build upon previous analysis if provided.`,
                 } else if (trimmedLine.match(/^\d+\./) && currentSection === 'questions') {
                     const question = trimmedLine.replace(/^\d+\.\s*/, '').trim();
                     if (question && question.includes('?')) {
-                        structuredData.actions.push(`❓ ${question}`);
+                        structuredData.actions.push(`${question}`);
                     }
                 }
             }
 
             // 기본 액션 추가
-            const defaultActions = ['✨ What should I say next?', '💬 Suggest follow-up questions'];
+            const defaultActions = ['What should I say next?', 'Suggest follow-up questions'];
             defaultActions.forEach(action => {
                 if (!structuredData.actions.includes(action)) {
                     structuredData.actions.push(action);
@@ -289,8 +306,8 @@ Keep all points concise and build upon previous analysis if provided.`,
                 previousResult || {
                     summary: [],
                     topic: { header: 'Analysis in progress', bullets: [] },
-                    actions: ['✨ What should I say next?', '💬 Suggest follow-up questions'],
-                    followUps: ['✉️ Draft a follow-up email', '✅ Generate action items', '📝 Show summary'],
+                    actions: ['What should I say next?', 'Suggest follow-up questions'],
+                    followUps: ['Draft a follow-up email', 'Generate action items', 'Show summary'],
                 }
             );
         }

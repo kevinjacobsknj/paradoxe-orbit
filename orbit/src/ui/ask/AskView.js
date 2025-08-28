@@ -14,6 +14,11 @@ export class AskView extends LitElement {
         headerText: { type: String },
         headerAnimating: { type: Boolean },
         isStreaming: { type: Boolean },
+        isNavigatingExternal: { type: Boolean },
+        externalContent: { type: String },
+        originalContent: { type: String },
+        browserTabs: { type: Array },
+        activeTabIndex: { type: Number },
     };
 
     static styles = css`
@@ -103,6 +108,166 @@ export class AskView extends LitElement {
         .response-container, .response-container * {
             user-select: text !important;
             cursor: text !important;
+        }
+
+        /* Link styling */
+        .response-container a {
+            color: #FF3D00 !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+        }
+
+        .response-container a:hover {
+            color: #FF6D00 !important;
+            text-decoration: underline !important;
+        }
+
+        .response-container a:visited {
+            color: #D84315 !important;
+        }
+
+        /* Inline back button styling */
+        .response-container .inline-back-button {
+            background: rgba(255, 61, 0, 0.2) !important;
+            color: #FF3D00 !important;
+            border: 1px solid rgba(255, 61, 0, 0.5) !important;
+            padding: 8px 16px !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            transition: all 0.15s ease !important;
+            user-select: none !important;
+        }
+
+        .response-container .inline-back-button:hover {
+            background: rgba(255, 61, 0, 0.3) !important;
+            border-color: rgba(255, 61, 0, 0.7) !important;
+        }
+
+        /* Mini Browser Interface */
+        .mini-browser {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #1a1a1a;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .browser-header {
+            background: #000000;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+        .browser-back-button {
+            background: #222222;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+            outline: none;
+        }
+
+        .browser-back-button:hover {
+            background: #333333;
+        }
+
+        .browser-back-button:focus {
+            outline: none;
+        }
+
+        .browser-tabs {
+            display: flex;
+            flex: 1;
+            gap: 2px;
+            overflow-x: auto;
+        }
+
+        .browser-tab {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 12px;
+            white-space: nowrap;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s ease;
+        }
+
+        .browser-tab.active {
+            background: rgba(255, 61, 0, 0.2);
+            color: #FF3D00;
+            border-bottom: 2px solid #FF3D00;
+        }
+
+        .browser-tab:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .browser-tab.active:hover {
+            background: rgba(255, 61, 0, 0.3);
+        }
+
+        .tab-close {
+            background: none;
+            border: none;
+            color: currentColor;
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 2px;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .tab-close:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .browser-content {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: white;
+        }
+
+        .browser-new-tab {
+            background: rgba(255, 61, 0, 0.1);
+            color: #FF3D00;
+            border: 1px dashed rgba(255, 61, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.15s ease;
+        }
+
+        .browser-new-tab:hover {
+            background: rgba(255, 61, 0, 0.2);
+            border-color: rgba(255, 61, 0, 0.5);
         }
 
         .response-container pre {
@@ -338,6 +503,35 @@ export class AskView extends LitElement {
             transform: translate(-50%, -50%) scale(1);
         }
 
+        .back-button {
+            background: #222222;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.15s ease;
+            outline: none;
+        }
+
+        .back-button:hover {
+            background: #333333;
+            color: white;
+        }
+
+        .back-button:focus {
+            outline: none;
+        }
+
+        .back-button svg {
+            flex-shrink: 0;
+        }
+
         .close-button {
             background: rgba(255, 255, 255, 0.07);
             color: white;
@@ -477,6 +671,96 @@ export class AskView extends LitElement {
         .response-line:hover {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
+        }
+
+        /* Replace lightning emoji with spinning logo for loading text */
+        .response-container em {
+            position: relative;
+        }
+
+        /* Target em elements that contain the lightning bolt (loading indicator) */
+        .response-container em:has-text("⚡"):before,
+        .response-container em:contains("⚡"):before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-image: url('../assets/logoloading.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: spin 1.5s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        /* Style em elements that contain "Generating enhanced sections" */
+        .response-container em {
+            font-style: italic;
+        }
+
+        /* Special styling for what appears to be loading text (last em in last p) */
+        .response-container p:last-child em:last-child {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .response-container p:last-child em:last-child:before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background-image: url('../assets/logoloading.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: spin 1.5s linear infinite;
+            flex-shrink: 0;
+        }
+
+        /* Hide the first character (lightning emoji) using text indent */
+        .response-container p:last-child em:last-child {
+            text-indent: -1.2em;
+            padding-left: 1.5em;
+        }
+
+        .loading-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-style: italic;
+            font-size: 14px;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .loading-logo {
+            width: 20px;
+            height: 20px;
+            background-image: url('../assets/logoloading.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: spin 1.5s linear infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .line-copy-button {
@@ -752,6 +1036,11 @@ export class AskView extends LitElement {
         this.headerText = 'AI Response';
         this.headerAnimating = false;
         this.isStreaming = false;
+        this.isNavigatingExternal = false;
+        this.externalContent = '';
+        this.originalContent = '';
+        this.browserTabs = [];
+        this.activeTabIndex = 0;
 
         this.marked = null;
         this.hljs = null;
@@ -1025,6 +1314,13 @@ export class AskView extends LitElement {
         const responseContainer = this.shadowRoot.getElementById('responseContainer');
         if (!responseContainer) return;
     
+        // If navigating to external content, show that instead
+        if (this.isNavigatingExternal && this.externalContent) {
+            responseContainer.innerHTML = this.externalContent;
+            this.adjustWindowHeightThrottled();
+            return;
+        }
+        
         // Check loading state
         if (this.isLoading) {
             responseContainer.innerHTML = `
@@ -1104,6 +1400,34 @@ export class AskView extends LitElement {
                 });
             }
 
+            // Add link click handlers for simple navigation with stronger interception
+            responseContainer.querySelectorAll('a').forEach(link => {
+                if (!link.hasAttribute('data-nav-handled')) {
+                    // Remove any existing href to prevent default navigation
+                    const originalHref = link.href;
+                    link.removeAttribute('href');
+                    link.style.cursor = 'pointer';
+                    
+                    // Store original URL as data attribute
+                    link.setAttribute('data-original-href', originalHref);
+                    
+                    // Add click handler
+                    link.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        console.log('[AskView] Link intercepted:', originalHref);
+                        
+                        // Simulate the link object for handleLinkClick
+                        const mockLink = { href: originalHref };
+                        event.target.closest('a').href = originalHref; // Temporarily restore for handler
+                        this.handleLinkClick(event);
+                    });
+                    
+                    link.setAttribute('data-nav-handled', 'true');
+                    console.log('[AskView] Link handler attached to:', originalHref);
+                }
+            });
+
             // 스크롤을 맨 아래로
             responseContainer.scrollTop = responseContainer.scrollHeight;
             
@@ -1115,7 +1439,16 @@ export class AskView extends LitElement {
     }
 
     renderFallbackContent(responseContainer) {
-        const textToRender = this.currentResponse || '';
+        let textToRender = this.currentResponse || '';
+        
+        // Pre-process the text to convert loading indicator to HTML
+        if (textToRender.includes('*🔄 Generating enhanced sections')) {
+            console.log('[AskView] Found loading indicator in text, converting to HTML');
+            textToRender = textToRender.replace(
+                /\*🔄 Generating enhanced sections \(AI Overview, Wikipedia, Reddit, TL;DR\)...\*/g,
+                '<div class="loading-enhanced"><div class="loading-logo"></div>Generating enhanced sections (AI Overview, Wikipedia, Reddit, TL;DR)...</div>'
+            );
+        }
         
         if (this.isLibrariesLoaded && this.marked && this.DOMPurify) {
             try {
@@ -1127,12 +1460,14 @@ export class AskView extends LitElement {
                     ALLOWED_TAGS: [
                         'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'br', 'strong', 'b', 'em', 'i',
                         'ul', 'ol', 'li', 'blockquote', 'code', 'pre', 'a', 'img', 'table', 'thead',
-                        'tbody', 'tr', 'th', 'td', 'hr', 'sup', 'sub', 'del', 'ins',
+                        'tbody', 'tr', 'th', 'td', 'hr', 'sup', 'sub', 'del', 'ins', 'div', 'span',
                     ],
                     ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'id', 'target', 'rel'],
                 });
 
                 responseContainer.innerHTML = cleanHtml;
+
+                // CSS handles the loading animation automatically
 
                 // 코드 하이라이팅 적용
                 if (this.hljs) {
@@ -1146,17 +1481,32 @@ export class AskView extends LitElement {
             }
         } else {
             // 라이브러리가 로드되지 않았을 때 기본 렌더링
-            const basicHtml = textToRender
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/\n\n/g, '</p><p>')
-                .replace(/\n/g, '<br>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/`([^`]+)`/g, '<code>$1</code>');
+            let processedText = textToRender;
+            
+            // Handle loading indicator first before HTML escaping
+            if (processedText.includes('*🔄 Generating enhanced sections')) {
+                console.log('[AskView] Fallback: Found loading indicator, converting to HTML');
+                processedText = processedText.replace(
+                    /\*🔄 Generating enhanced sections \(AI Overview, Wikipedia, Reddit, TL;DR\)...\*/g,
+                    '<div class="loading-enhanced"><div class="loading-logo"></div>Generating enhanced sections (AI Overview, Wikipedia, Reddit, TL;DR)...</div>'
+                );
+                
+                // For HTML content with div, render directly
+                responseContainer.innerHTML = processedText;
+            } else {
+                // Normal text processing with HTML escaping
+                const basicHtml = processedText
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/\n\n/g, '</p><p>')
+                    .replace(/\n/g, '<br>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/`([^`]+)`/g, '<code>$1</code>');
 
-            responseContainer.innerHTML = `<p>${basicHtml}</p>`;
+                responseContainer.innerHTML = `<p>${basicHtml}</p>`;
+            }
         }
     }
 
@@ -1342,7 +1692,8 @@ export class AskView extends LitElement {
         super.updated(changedProperties);
     
         // ✨ isLoading 또는 currentResponse가 변경될 때마다 뷰를 다시 그립니다.
-        if (changedProperties.has('isLoading') || changedProperties.has('currentResponse')) {
+        if (changedProperties.has('isLoading') || changedProperties.has('currentResponse') || 
+            changedProperties.has('isNavigatingExternal') || changedProperties.has('externalContent')) {
             this.renderContent();
         }
     
@@ -1373,12 +1724,54 @@ export class AskView extends LitElement {
         const headerText = this.isLoading ? 'Thinking...' : 'AI Response';
 
         return html`
+            <!-- Mini Browser Interface -->
+            ${this.isNavigatingExternal && this.browserTabs.length > 0 ? html`
+                <div class="mini-browser">
+                    <div class="browser-header">
+                        <button class="browser-back-button" @click=${this.handleBackToResponse}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m12 19-7-7 7-7"/>
+                                <path d="m19 12H5"/>
+                            </svg>
+                            Back to Chat
+                        </button>
+                        
+                        <div class="browser-tabs">
+                            ${this.browserTabs.map((tab, index) => html`
+                                <button class="browser-tab ${tab.active ? 'active' : ''}" @click=${() => this.switchToTab(index)}>
+                                    <span>${tab.title}</span>
+                                    <button class="tab-close" @click=${(e) => this.closeTab(index, e)}>×</button>
+                                </button>
+                            `)}
+                            <button class="browser-new-tab" @click=${this.createNewTab}>+</button>
+                        </div>
+                    </div>
+                    
+                    <webview 
+                        class="browser-content" 
+                        src="${this.browserTabs[this.activeTabIndex]?.url || 'about:blank'}"
+                        webpreferences="contextIsolation=false"
+                        allowpopups
+                    ></webview>
+                </div>
+            ` : ''}
+
             <div class="ask-container">
                 <!-- Response Header -->
                 <div class="response-header ${!hasResponse ? 'hidden' : ''}">
                     <div class="header-left">
-                        <img src="../assets/logomain.png" alt="Glass" style="width: 18px; height: 18px; object-fit: contain; margin-right: 8px;">
-                        <span class="response-label">${headerText}</span>
+                        ${this.isNavigatingExternal && this.browserTabs.length === 0 ? html`
+                            <button class="back-button" @click=${this.handleBackToResponse}>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m12 19-7-7 7-7"/>
+                                    <path d="m19 12H5"/>
+                                </svg>
+                                Back to Chat
+                            </button>
+                        ` : html`
+                            <img src="../assets/logomain.png" alt="Glass" style="width: 18px; height: 18px; object-fit: contain; margin-right: 8px;">
+                            <span class="response-label">${headerText}</span>
+                        `}
                     </div>
                     <div class="header-right">
                         <span class="question-text">${this.getTruncatedQuestion(this.currentQuestion)}</span>
@@ -1472,6 +1865,167 @@ export class AskView extends LitElement {
             this.isThrottled = false;
         });
     }
+
+    // Handle link clicks for internal mini browser
+    handleLinkClick(event) {
+        console.log('[AskView] Link clicked:', event.target);
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const link = event.target.closest('a');
+        if (!link || !link.href) {
+            console.log('[AskView] No valid link found');
+            return;
+        }
+        
+        console.log('[AskView] Opening link in mini browser:', link.href);
+        
+        // Store original content
+        if (!this.isNavigatingExternal) {
+            this.originalContent = this.currentResponse;
+        }
+        
+        // Create or add tab
+        this.openInMiniBrowser(link.href, this.getTabTitle(link.href));
+    }
+
+    // Show link notification
+    showLinkNotification(message) {
+        // Create a temporary notification element
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Animate in
+        requestAnimationFrame(() => {
+            notification.style.opacity = '1';
+        });
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    // Extract a nice title from URL
+    getTabTitle(url) {
+        try {
+            const urlObj = new URL(url);
+            const domain = urlObj.hostname.replace('www.', '');
+            const path = urlObj.pathname;
+            
+            if (domain === 'en.wikipedia.org') {
+                const article = path.split('/wiki/')[1];
+                return article ? decodeURIComponent(article.replace(/_/g, ' ')) : 'Wikipedia';
+            } else if (domain === 'reddit.com') {
+                if (path.includes('/r/')) {
+                    return path.split('/')[2] ? `r/${path.split('/')[2]}` : 'Reddit';
+                }
+                return 'Reddit';
+            } else {
+                return domain.charAt(0).toUpperCase() + domain.slice(1);
+            }
+        } catch {
+            return 'Website';
+        }
+    }
+
+    // Open URL in mini browser
+    openInMiniBrowser(url, title) {
+        // Add new tab
+        const newTab = {
+            id: Date.now(),
+            title: title,
+            url: url,
+            active: true
+        };
+        
+        // Set all other tabs to inactive
+        this.browserTabs = this.browserTabs.map(tab => ({ ...tab, active: false }));
+        
+        // Add new tab
+        this.browserTabs = [...this.browserTabs, newTab];
+        this.activeTabIndex = this.browserTabs.length - 1;
+        
+        // Set navigation state
+        this.isNavigatingExternal = true;
+        
+        this.requestUpdate();
+    }
+
+    // Switch to a tab
+    switchToTab(index) {
+        this.browserTabs = this.browserTabs.map((tab, i) => ({
+            ...tab,
+            active: i === index
+        }));
+        this.activeTabIndex = index;
+        this.requestUpdate();
+    }
+
+    // Close a tab
+    closeTab(index, event) {
+        event.stopPropagation();
+        
+        this.browserTabs = this.browserTabs.filter((_, i) => i !== index);
+        
+        if (this.browserTabs.length === 0) {
+            // No tabs left, return to chat
+            this.handleBackToResponse();
+            return;
+        }
+        
+        // Adjust active tab index if needed
+        if (index <= this.activeTabIndex) {
+            this.activeTabIndex = Math.max(0, this.activeTabIndex - 1);
+        }
+        
+        // Set the new active tab
+        this.browserTabs = this.browserTabs.map((tab, i) => ({
+            ...tab,
+            active: i === this.activeTabIndex
+        }));
+        
+        this.requestUpdate();
+    }
+
+    // Create new tab
+    createNewTab() {
+        this.openInMiniBrowser('https://www.google.com', 'Google');
+    }
+
+    // Handle back to response
+    handleBackToResponse() {
+        this.isNavigatingExternal = false;
+        this.browserTabs = [];
+        this.activeTabIndex = 0;
+        if (this.originalContent) {
+            this.currentResponse = this.originalContent;
+            this.originalContent = null;
+        }
+        this.requestUpdate();
+    }
+
+
 }
 
 customElements.define('ask-view', AskView);

@@ -109,16 +109,15 @@ export class MainHeader extends LitElement {
             -webkit-app-region: drag;
             width: 100%;
             height: 47px;
-            padding: 2px 10px 2px 13px;
-            background: transparent;
-            overflow: visible;
+            padding: 0px 10px 0px 13px;
+            background: rgba(0, 0, 0, 0.85);
+            overflow: hidden;
             border-radius: 9000px;
-            /* backdrop-filter: blur(1px); */
             justify-content: space-between;
             align-items: center;
             display: flex;
-            box-sizing: border-box;
             position: relative;
+            box-sizing: border-box;
         }
 
         .header::before {
@@ -152,7 +151,7 @@ export class MainHeader extends LitElement {
             height: 28px;
             width: 28px;
             padding: 2px;
-            background: transparent;
+            background: rgba(0, 0, 0, 0.85);
             border: none;
             cursor: pointer;
             display: flex;
@@ -302,7 +301,7 @@ export class MainHeader extends LitElement {
             -webkit-app-region: no-drag;
             padding: 5px;
             border-radius: 50%;
-            background: transparent;
+            background: rgba(0, 0, 0, 0.85);
             transition: background 0.15s ease;
             color: white;
             border: none;
@@ -346,7 +345,7 @@ export class MainHeader extends LitElement {
         .ask-input {
             -webkit-app-region: no-drag;
             flex: 1;
-            background: transparent;
+            background: rgba(0, 0, 0, 0.85);
             border: none;
             outline: none;
             color: white;
@@ -364,7 +363,7 @@ export class MainHeader extends LitElement {
 
         .ask-submit-button {
             -webkit-app-region: no-drag;
-            background: transparent;
+            background: rgba(0, 0, 0, 0.85);
             border: none;
             color: rgba(255, 255, 255, 1);
             cursor: pointer;
@@ -391,6 +390,36 @@ export class MainHeader extends LitElement {
             height: 14px;
         }
 
+        /* Listen Button Styling */
+        .listen-button {
+            -webkit-app-region: no-drag;
+            background: rgba(0, 0, 0, 0.85);
+            border: none;
+            border-radius: 50%;
+            padding: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            width: 35px;
+            height: 35px;
+            flex-shrink: 0;
+            margin: 6px 0;
+            box-sizing: border-box;
+        }
+
+        .listen-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        .listen-button img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
         /* AI Response Display */
         .ask-response-container {
             position: absolute;
@@ -409,9 +438,12 @@ export class MainHeader extends LitElement {
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
+
         .ask-response-content {
             color: white;
             font-size: 13px;
+            position: relative;
+            z-index: 2;
             line-height: 1.5;
             white-space: pre-wrap;
             word-wrap: break-word;
@@ -541,6 +573,8 @@ export class MainHeader extends LitElement {
             transform: none !important;
             will-change: auto !important;
         }
+
+
         `;
 
 
@@ -962,7 +996,7 @@ export class MainHeader extends LitElement {
         
         // Add content
         this.directResponseContainer.innerHTML = `
-            <img src="../assets/logomain.png" alt="Glass" style="
+            <img src="../assets/logomain.png" alt="Paradoxe Orbit" style="
                 width: 24px !important;
                 height: 24px !important;
                 object-fit: contain !important;
@@ -1164,6 +1198,7 @@ export class MainHeader extends LitElement {
         return btoa(binary);
     }
 
+
     async stopPushToTalk() {
         if (!this.isPushToTalkActive || !window.api) return;
         
@@ -1225,6 +1260,7 @@ export class MainHeader extends LitElement {
             console.error('[Push-to-talk] Error stopping microphone capture:', error);
         }
     }
+
     async _handleToggleAllWindowsVisibility() {
         if (this.wasJustDragged) return;
 
@@ -1278,7 +1314,7 @@ export class MainHeader extends LitElement {
                     ?disabled=${this.isTogglingSession}
                     title="Click to ${listenButtonText}"
                 >
-                    <img src="../assets/logomain.png" alt="Glass Logo" />
+                    <img src="../assets/logomain.png" alt="Paradoxe Orbit Logo" />
                 </button>
 
                 <!-- Ask input field -->
@@ -1316,6 +1352,7 @@ export class MainHeader extends LitElement {
                             `
                         }
                     </button>
+
                 </div>
 
                 <!-- AI Response Display - Show when both conditions are met -->
@@ -1336,7 +1373,7 @@ export class MainHeader extends LitElement {
                         display: flex !important;
                         gap: 12px !important;
                     ">
-                        <img src="../assets/logomain.png" alt="Glass" style="
+                        <img src="../assets/logomain.png" alt="Paradoxe Orbit" style="
                             width: 24px !important;
                             height: 24px !important;
                             object-fit: contain !important;

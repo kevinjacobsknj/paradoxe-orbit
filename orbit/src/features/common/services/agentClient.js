@@ -8,7 +8,7 @@ class AgentClient {
     constructor() {
         this.agentDaemonUrl = process.env.AGENT_DAEMON_URL || 'http://localhost:4823';
         this.healthCheckTimeout = parseInt(process.env.AGENT_HEALTH_TIMEOUT) || 2000;
-        this.taskTimeout = parseInt(process.env.AGENT_TASK_TIMEOUT) || 10000;
+        this.taskTimeout = parseInt(process.env.AGENT_TASK_TIMEOUT) || 30000;
         this.isAvailable = false;
         this.checkAvailability();
     }
@@ -28,37 +28,110 @@ class AgentClient {
     }
 
     /**
-     * Detect if a user query requires web search
-     * @param {string} query - User query
-     * @returns {boolean} - True if query needs web search
+     * Detect if a user query requires web search/browser automation vs LLM response
+     * @param {string} query - User query  
+     * @returns {boolean} - True if query needs web search/browser automation, false for LLM
      */
     isSearchQuery(query) {
-        const searchIndicators = [
-            // Direct search commands
-            'search for', 'google', 'find', 'lookup', 'browse', 'web search',
-            
-            // Question words that often need current info
-            'what is', 'who is', 'where is', 'when is', 'how to', 'why is',
-            'what are', 'who are', 'where are', 'when are', 'how are',
-            
-            // Current/recent info requests
-            'latest', 'recent', 'current', 'new', 'updated', 'today', 'now',
-            '2024', '2025', 'this year', 'this month',
-            
-            // Comparison/shopping queries
-            'best', 'top', 'compare', 'vs', 'versus', 'better than',
-            'price', 'cost', 'buy', 'purchase', 'shop',
-            
-            // Information gathering
-            'news', 'information about', 'tell me about', 'learn about',
-            'facts about', 'details about', 'research',
-            
-            // List/recommendation queries
-            'list of', 'examples of', 'types of', 'kinds of', 'recommendations'
+        const queryLower = query.toLowerCase().trim();
+        
+        // EXPLICIT BROWSER COMMANDS - Always require browser
+        const explicitBrowserCommands = [
+            'search for', 'google', 'find on', 'lookup on', 'browse', 'web search', 
+            'go to', 'visit', 'open', 'navigate to', 'check on',
+            'click', 'click on', 'click the', 'select', 'choose',
+            'first link', 'first result', 'top result',
+            'amazon', 'youtube', 'netflix', 'wikipedia', 'maps', 'ebay', 'facebook', 'twitter',
+            'buy', 'purchase', 'shop for', 'order', 'add to cart'
         ];
-
-        const queryLower = query.toLowerCase();
-        return searchIndicators.some(indicator => queryLower.includes(indicator));
+        
+        // Check for explicit browser commands first
+        if (explicitBrowserCommands.some(cmd => queryLower.includes(cmd))) {
+            return true;
+        }
+        
+        // CURRENT/RECENT INFO - Likely needs web search
+        const currentInfoIndicators = [
+            'latest', 'recent', 'current', 'new', 'updated', 'today', 'now', 'this week',
+            '2024', '2025', 'this year', 'this month', 'breaking', 'trending',
+            'price', 'cost', 'stock price', 'weather', 'news', 'score', 'results'
+        ];
+        
+        // GENERAL KNOWLEDGE - Can be answered by LLM
+        const llmSuitablePatterns = [
+            // Basic definitions and explanations
+            /^what is (?!the (latest|current|recent|new))/i,
+            /^what are (?!the (latest|current|recent|new))/i,
+            /^who is (?!the (current|new|latest))/i,
+            /^who was/i,
+            /^when was/i,
+            /^where is (?!the (nearest|closest))/i,
+            /^how does/i,
+            /^how do/i,
+            /^why is/i,
+            /^why do/i,
+            /^explain/i,
+            /^define/i,
+            /^what does .+ mean/i,
+            /^tell me about (?!the (latest|current|recent))/i,
+            
+            // Historical and factual questions
+            /^when did/i,
+            /^where did/i,
+            /^how did/i,
+            /^who invented/i,
+            /^who created/i,
+            /^what happened/i,
+            
+            // General concepts and knowledge
+            /^how to (?!(find|search|buy|purchase))/i,
+            /^what are the (benefits|advantages|disadvantages|pros|cons)/i,
+            /^what are (some|examples of|types of) (?!(the latest|current))/i,
+            /^can you (explain|tell me|help me understand)/i,
+            /^help me understand/i,
+            
+            // Mathematical and technical concepts
+            /^calculate/i,
+            /^solve/i,
+            /^what is [\d\+\-\*\/\s]+ equal/i,
+        ];
+        
+        // Check if query matches LLM-suitable patterns
+        const isLLMSuitable = llmSuitablePatterns.some(pattern => pattern.test(queryLower));
+        
+        if (isLLMSuitable) {
+            // Double-check for current info indicators that would require web search
+            const needsCurrentInfo = currentInfoIndicators.some(indicator => queryLower.includes(indicator));
+            return needsCurrentInfo; // Return true only if needs current info
+        }
+        
+        // AMBIGUOUS CASES - Check for current info needs
+        const questionWords = ['what', 'who', 'where', 'when', 'how', 'why'];
+        const startsWithQuestion = questionWords.some(word => queryLower.startsWith(word));
+        
+        if (startsWithQuestion) {
+            // If it's a question but needs current info, use browser
+            return currentInfoIndicators.some(indicator => queryLower.includes(indicator));
+        }
+        
+        // DEFAULT FALLBACK
+        // For location-based queries ("near me", "nearby", addresses)
+        if (queryLower.includes('near me') || queryLower.includes('nearby') || queryLower.includes('location')) {
+            return true;
+        }
+        
+        // For comparison queries that might need current data
+        if (queryLower.includes('vs') || queryLower.includes('versus') || queryLower.includes('compare')) {
+            return true;
+        }
+        
+        // Multi-step instructions with 'and' - likely browser tasks
+        if (queryLower.includes(' and ') && explicitBrowserCommands.some(cmd => queryLower.includes(cmd))) {
+            return true;
+        }
+        
+        // Default to LLM for general knowledge questions
+        return false;
     }
 
     /**

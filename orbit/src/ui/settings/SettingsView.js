@@ -32,6 +32,7 @@ export class SettingsView extends LitElement {
             z-index: 1000;
         }
 
+
         .settings-container::-webkit-scrollbar {
             width: 6px;
         }
@@ -80,8 +81,9 @@ export class SettingsView extends LitElement {
             padding-bottom: 6px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
+
 
         .title-line {
             display: flex;
@@ -505,6 +507,8 @@ export class SettingsView extends LitElement {
         installingModels: { type: Object, state: true },
         // Whisper related properties
         whisperModels: { type: Array, state: true },
+        // Cost optimization settings
+        settings: { type: Object, state: true },
     };
     //////// after_modelStateService ////////
 
@@ -537,6 +541,7 @@ export class SettingsView extends LitElement {
         this.handleUseParadoxesKey = this.handleUseParadoxesKey.bind(this)
         this.autoUpdateEnabled = true;
         this.autoUpdateLoading = true;
+        this.settings = { userTier: 'starter' }; // Initialize settings
         this.loadInitialData();
         //////// after_modelStateService ////////
     }
@@ -613,12 +618,13 @@ export class SettingsView extends LitElement {
         this.isLoading = true;
         try {
             // Load essential data first
-            const [userState, modelSettings, presets, contentProtection, shortcuts] = await Promise.all([
+            const [userState, modelSettings, presets, contentProtection, shortcuts, settings] = await Promise.all([
                 window.api.settingsView.getCurrentUser(),
                 window.api.settingsView.getModelSettings(), // Facade call
                 window.api.settingsView.getPresets(),
                 window.api.settingsView.getContentProtectionStatus(),
-                window.api.settingsView.getCurrentShortcuts()
+                window.api.settingsView.getCurrentShortcuts(),
+                window.api.settingsView.getSettings()
             ]);
             
             if (userState && userState.isLoggedIn) this.firebaseUser = userState;
@@ -636,6 +642,13 @@ export class SettingsView extends LitElement {
             this.presets = presets || [];
             this.isContentProtectionOn = contentProtection;
             this.shortcuts = shortcuts || {};
+            
+            // Load user settings including tier
+            if (settings) {
+                this.settings = { ...this.settings, ...settings };
+                console.log(`[SettingsView] Loaded settings:`, this.settings);
+            }
+            
             if (this.presets.length > 0) {
                 const firstUserPreset = this.presets.find(p => p.is_default === 0);
                 if (firstUserPreset) this.selectedPreset = firstUserPreset;
@@ -1176,6 +1189,28 @@ export class SettingsView extends LitElement {
         }
     }
 
+    async handleTierChange(event) {
+        const newTier = event.target.value;
+        console.log(`[SettingsView] User tier changed to: ${newTier}`);
+        
+        // Update local settings
+        this.settings = { ...this.settings, userTier: newTier };
+        
+        try {
+            // Save to settings service
+            const result = await window.api.settingsView.saveSettings({ userTier: newTier });
+            if (result.success) {
+                console.log(`[SettingsView] Successfully saved user tier: ${newTier}`);
+            } else {
+                console.error('[SettingsView] Failed to save user tier:', result.error);
+            }
+        } catch (error) {
+            console.error('[SettingsView] Error saving user tier:', error);
+        }
+        
+        this.requestUpdate();
+    }
+
     //////// after_modelStateService ////////
     render() {
         if (this.isLoading) {
@@ -1351,7 +1386,7 @@ export class SettingsView extends LitElement {
             <div class="settings-container">
                 <div class="header-section">
                     <div>
-                        <h1 class="app-title">Paradoxe Glass</h1>
+                        <h1 class="app-title">Paradoxe Orbit</h1>
                         <div class="account-info">
                             ${this.firebaseUser
                                 ? html`Account: ${this.firebaseUser.email || 'Logged In'}`
@@ -1367,6 +1402,37 @@ export class SettingsView extends LitElement {
                 </div>
 
                 ${apiKeyManagementHTML}
+                
+                <!-- Cost Optimization Settings -->
+                <div class="api-key-section">
+                    <div class="provider-key-group">
+                        <label>Subscription Tier</label>
+                        <select class="model-dropdown" @change=${this.handleTierChange}>
+                            <option value="starter" ?selected=${this.settings?.userTier === 'starter'}>Starter ($15/mo) - 3M tokens</option>
+                            <option value="pro" ?selected=${this.settings?.userTier === 'pro'}>Pro ($30/mo) - 3M tokens + GPT-5</option>
+                            <option value="power" ?selected=${this.settings?.userTier === 'power'}>Power ($50/mo) - 3M tokens + Premium models</option>
+                        </select>
+                        <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 4px;">
+                            Choose your subscription tier for model access and cost optimization
+                        </div>
+                    </div>
+                    
+                    <div class="provider-key-group">
+                        <label>Cost Optimization</label>
+                        <div style="padding: 6px; background: rgba(0,122,255,0.1); border-radius: 4px; font-size: 11px;">
+                            <div style="color: rgba(0,122,255,0.9); font-weight: 500; margin-bottom: 4px;">
+                                🤖 Smart Auto-Select Active
+                            </div>
+                            <div style="color: rgba(255,255,255,0.7);">
+                                • Automatically selects optimal model based on query complexity<br>
+                                • Routes to cheapest viable model (70-85% cost savings)<br>
+                                • Uses GPT-5 models for ${this.settings?.userTier || 'starter'}+ tier users<br>
+                                • Budget protection with 3M monthly token limits
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 ${modelSelectionHTML}
 
                 <div class="buttons-section" style="border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 6px; margin-top: 6px;">

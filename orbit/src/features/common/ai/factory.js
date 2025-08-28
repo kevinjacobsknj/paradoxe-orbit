@@ -22,7 +22,16 @@ const PROVIDERS = {
       name: 'OpenAI',
       handler: () => require("./providers/openai"),
       llmModels: [
-          { id: 'gpt-4.1', name: 'GPT-4.1' },
+          { id: 'gpt-4o-mini', name: 'GPT-4o Mini' },
+          { id: 'gpt-4o', name: 'GPT-4o' },
+          { id: 'gpt-5', name: 'GPT-5' },
+          { id: 'gpt-5-mini', name: 'GPT-5 Mini' },
+          { id: 'gpt-5-nano', name: 'GPT-5 Nano' },
+          { id: 'gpt-5-chat', name: 'GPT-5 Chat' },
+          { id: 'gpt-5-thinking', name: 'GPT-5 Thinking' },
+          { id: 'gpt-5-thinking-mini', name: 'GPT-5 Thinking Mini' },
+          { id: 'gpt-5-thinking-nano', name: 'GPT-5 Thinking Nano' },
+          { id: 'cost-optimized', name: '🤖 Smart Auto-Select (Recommended)' },
       ],
       sttModels: [
           { id: 'gpt-4o-mini-transcribe', name: 'GPT-4o Mini Transcribe' }
@@ -30,13 +39,22 @@ const PROVIDERS = {
   },
 
   'openai-orbit': {
-      name: 'OpenAI (Glass)',
+      name: 'OpenAI (Orbit)',
       handler: () => require("./providers/openai"),
       llmModels: [
-          { id: 'gpt-4.1-glass', name: 'GPT-4.1 (glass)' },
+          { id: 'gpt-4o-mini-orbit', name: 'GPT-4o Mini (Orbit)' },
+          { id: 'gpt-4o-orbit', name: 'GPT-4o (Orbit)' },
+          { id: 'gpt-5-orbit', name: 'GPT-5 (Orbit)' },
+          { id: 'gpt-5-mini-orbit', name: 'GPT-5 Mini (Orbit)' },
+          { id: 'gpt-5-nano-orbit', name: 'GPT-5 Nano (Orbit)' },
+          { id: 'gpt-5-chat-orbit', name: 'GPT-5 Chat (Orbit)' },
+          { id: 'gpt-5-thinking-orbit', name: 'GPT-5 Thinking (Orbit)' },
+          { id: 'gpt-5-thinking-mini-orbit', name: 'GPT-5 Thinking Mini (Orbit)' },
+          { id: 'gpt-5-thinking-nano-orbit', name: 'GPT-5 Thinking Nano (Orbit)' },
+          { id: 'cost-optimized-orbit', name: '🤖 Smart Auto-Select (Recommended)' },
       ],
       sttModels: [
-          { id: 'gpt-4o-mini-transcribe-glass', name: 'GPT-4o Mini Transcribe (glass)' }
+          { id: 'gpt-4o-mini-transcribe-orbit', name: 'GPT-4o Mini Transcribe (Orbit)' }
       ],
   },
   'gemini': {

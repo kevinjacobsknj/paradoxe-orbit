@@ -214,7 +214,9 @@ function getDefaultSettings() {
         googleSearchEnabled: false,
         backgroundTransparency: 0.5,
         fontSize: 14,
-        contentProtection: true
+        contentProtection: true,
+        userTier: 'starter', // Cost optimization tier
+        selectedLlmModel: null // Allow manual LLM model override
     };
 }
 
