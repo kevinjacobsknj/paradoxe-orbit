@@ -152,15 +152,17 @@ export class AskView extends LitElement {
 
         /* Mini Browser Interface */
         .mini-browser {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            position: relative;
+            width: 100%;
+            min-height: 500px;
+            max-height: 700px;
+            height: auto;
             background: #f8f8f8;
-            z-index: 1000;
             display: flex;
             flex-direction: column;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 8px;
         }
 
         .browser-header {
@@ -370,7 +372,7 @@ export class AskView extends LitElement {
             border-radius: 12px;
             box-sizing: border-box;
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
             box-shadow: 
                 8px 8px 16px rgba(0, 0, 0, 0.4),
                 -8px -8px 16px rgba(255, 255, 255, 0.02),
@@ -543,6 +545,7 @@ export class AskView extends LitElement {
             box-shadow: 
                 3px 3px 6px rgba(0, 0, 0, 0.4),
                 -3px -3px 6px rgba(255, 255, 255, 0.02);
+            margin-right: 8px;
         }
 
         .back-button:hover {
@@ -592,8 +595,10 @@ export class AskView extends LitElement {
             line-height: 1.6;
             background: transparent;
             min-height: 0;
-            max-height: 400px;
+            max-height: 380px;
             position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.08);
         }
         
         .response-container h1,
@@ -619,21 +624,28 @@ export class AskView extends LitElement {
         }
 
         .response-container::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
 
         .response-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            margin: 2px;
         }
 
         .response-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .response-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.6);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .response-container::-webkit-scrollbar-thumb:active {
+            background: rgba(255, 255, 255, 0.7);
         }
 
         .loading-orbit {
@@ -1196,6 +1208,14 @@ export class AskView extends LitElement {
 
             window.api.askView.onScrollResponseUp(() => this.handleScroll('up'));
             window.api.askView.onScrollResponseDown(() => this.handleScroll('down'));
+            
+            // Listen for mini browser open commands
+            if (window.api.askView.onOpenMiniBrowser) {
+                window.api.askView.onOpenMiniBrowser((event, data) => {
+                    console.log('[AskView] Opening mini browser:', data);
+                    this.openInMiniBrowser(data.url, data.title);
+                });
+            }
             window.api.askView.onAskStateUpdate((event, newState) => {
                 this.currentResponse = newState.currentResponse;
                 this.currentQuestion = newState.currentQuestion;
@@ -1306,6 +1326,11 @@ export class AskView extends LitElement {
     }
 
     handleCloseAskWindow() {
+        // Clear browser tabs when closing the window completely
+        this.browserTabs = [];
+        this.activeTabIndex = 0;
+        this.isNavigatingExternal = false;
+        this.originalContent = null;
         // this.clearResponseContent();
         window.api.askView.closeAskWindow();
     }
@@ -1799,9 +1824,15 @@ export class AskView extends LitElement {
     }
 
 
-    requestWindowResize(targetHeight) {
+    requestWindowResize(targetWidth, targetHeight) {
         if (window.api) {
-            window.api.askView.adjustWindowHeight(targetHeight);
+            if (targetHeight && !targetWidth) {
+                // Backward compatibility: if only height provided, use adjustWindowHeight
+                window.api.askView.adjustWindowHeight("ask", targetHeight);
+            } else if (targetWidth && targetHeight) {
+                // Use new adjustWindowSize for both width and height
+                window.api.askView.adjustWindowSize("ask", targetWidth, targetHeight);
+            }
         }
     }
 
@@ -2066,6 +2097,16 @@ export class AskView extends LitElement {
                     <div class="header-right">
                         <span class="question-text">${this.getTruncatedQuestion(this.currentQuestion)}</span>
                         <div class="header-controls">
+                            ${!this.isNavigatingExternal && this.browserTabs.length > 0 ? html`
+                                <button class="back-button" @click=${this.handleBackToBrowser}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                        <line x1="8" y1="21" x2="16" y2="21"/>
+                                        <line x1="12" y1="17" x2="12" y2="21"/>
+                                    </svg>
+                                    Back to Browser
+                                </button>
+                            ` : ''}
                             <button class="copy-button ${this.copyState === 'copied' ? 'copied' : ''}" @click=${this.handleCopy}>
                                 <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
@@ -2094,12 +2135,12 @@ export class AskView extends LitElement {
                 </div>
 
                 <!-- Response Container -->
-                <div class="response-container ${!hasResponse ? 'hidden' : ''}" id="responseContainer">
+                <div class="response-container ${!hasResponse || this.isNavigatingExternal ? 'hidden' : ''}" id="responseContainer">
                     <!-- Content is dynamically generated in updateResponseContent() -->
                 </div>
 
                 <!-- Text Input Container -->
-                <div class="text-input-container ${!hasResponse ? 'no-response' : ''} ${!this.showTextInput ? 'hidden' : ''}">
+                <div class="text-input-container ${!hasResponse ? 'no-response' : ''} ${!this.showTextInput || this.isNavigatingExternal ? 'hidden' : ''}">
                     <input
                         type="text"
                         id="textInput"
@@ -2126,21 +2167,26 @@ export class AskView extends LitElement {
         if (!window.api) return;
 
         this.updateComplete.then(() => {
+            // If mini browser is active, use larger width and height for better browser experience
+            if (this.isNavigatingExternal && this.browserTabs.length > 0) {
+                console.log('[AskView] Mini browser active - using fixed size: 900x700');
+                window.api.askView.adjustWindowSize("ask", 900, 700);
+                return;
+            }
+
+            // For chat mode, calculate content-based height and use normal width
             const headerEl = this.shadowRoot.querySelector('.response-header');
             const responseEl = this.shadowRoot.querySelector('.response-container');
             const inputEl = this.shadowRoot.querySelector('.text-input-container');
 
             if (!headerEl || !responseEl) return;
 
-            const headerHeight = headerEl.classList.contains('hidden') ? 0 : headerEl.offsetHeight;
-            const responseHeight = responseEl.scrollHeight;
-            const inputHeight = (inputEl && !inputEl.classList.contains('hidden')) ? inputEl.offsetHeight : 0;
+            // Use fixed 500px height for consistent scrolling experience
+            const targetHeight = 500;
 
-            const idealHeight = headerHeight + responseHeight + inputHeight;
-
-            const targetHeight = Math.min(700, idealHeight);
-
-            window.api.askView.adjustWindowHeight("ask", targetHeight);
+            // In chat mode, use fixed dimensions: 600x500
+            console.log('[AskView] Chat mode - using fixed dimensions: 600x500');
+            window.api.askView.adjustWindowSize("ask", 600, targetHeight);
 
         }).catch(err => console.error('AskView adjustWindowHeight error:', err));
     }
@@ -2259,7 +2305,17 @@ export class AskView extends LitElement {
         // Set navigation state
         this.isNavigatingExternal = true;
         
+        // Let mini browser use automatic window sizing like AI responses
+        console.log('[AskView] Opening mini browser - requesting window resize');
+        
         this.requestUpdate();
+        
+        // After DOM updates, explicitly resize window to accommodate mini browser
+        this.updateComplete.then(() => {
+            // Mini browser needs wider window: 900x700 for optimal browsing experience
+            console.log('[AskView] Requesting window resize for mini browser content: 900x700, centered');
+            this.requestWindowResize(900, 700, true); // Center for browser
+        });
     }
 
     // Switch to a tab
@@ -2279,8 +2335,15 @@ export class AskView extends LitElement {
         this.browserTabs = this.browserTabs.filter((_, i) => i !== index);
         
         if (this.browserTabs.length === 0) {
-            // No tabs left, return to chat
-            this.handleBackToResponse();
+            // No tabs left, return to chat and resize to normal dimensions
+            this.isNavigatingExternal = false;
+            if (this.originalContent) {
+                this.currentResponse = this.originalContent;
+                this.originalContent = null;
+            }
+            console.log('[AskView] All tabs closed - returning to chat mode with normal dimensions');
+            this.adjustWindowHeightThrottled();
+            this.requestUpdate();
             return;
         }
         
@@ -2306,13 +2369,34 @@ export class AskView extends LitElement {
     // Handle back to response
     handleBackToResponse() {
         this.isNavigatingExternal = false;
-        this.browserTabs = [];
-        this.activeTabIndex = 0;
+        // Keep browser tabs available for "Back to Browser" button
+        // this.browserTabs = []; // Don't clear tabs
+        // this.activeTabIndex = 0;
         if (this.originalContent) {
             this.currentResponse = this.originalContent;
             this.originalContent = null;
         }
+        
+        // Resize window back to normal chat size
+        console.log('[AskView] Returning to chat - resizing to normal dimensions');
+        this.adjustWindowHeightThrottled();
+        
         this.requestUpdate();
+    }
+
+    // Handle back to browser
+    handleBackToBrowser() {
+        if (this.browserTabs.length > 0) {
+            this.isNavigatingExternal = true;
+            
+            // Resize window back to browser size
+            this.updateComplete.then(() => {
+                console.log('[AskView] Returning to browser - resizing window: 900x700, centered');
+                this.requestWindowResize(900, 700, true); // Center for browser
+            });
+            
+            this.requestUpdate();
+        }
     }
 
 

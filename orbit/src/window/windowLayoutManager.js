@@ -127,6 +127,48 @@ class WindowLayoutManager {
         console.log(`[Layout Debug] calculateWindowHeightAdjustment: targetHeight=${targetHeight}`);
         return { ...currentBounds, height: adjustedHeight };
     }
+
+    calculateWindowSizeAdjustment(senderWindow, targetWidth, targetHeight, centerWindow = false) {
+        if (!senderWindow) return null;
+        const currentBounds = senderWindow.getBounds();
+        const [minWidth, minHeight] = senderWindow.getMinimumSize();
+        const [maxWidth, maxHeight] = senderWindow.getMaximumSize();
+        
+        let adjustedWidth = Math.max(minWidth, targetWidth);
+        if (maxWidth > 0) {
+            adjustedWidth = Math.min(maxWidth, adjustedWidth);
+        }
+        
+        let adjustedHeight = Math.max(minHeight, targetHeight);
+        if (maxHeight > 0) {
+            adjustedHeight = Math.min(maxHeight, adjustedHeight);
+        }
+        
+        if (centerWindow) {
+            // Center the window on the current display when explicitly requested (browser mode)
+            const currentDisplay = getCurrentDisplay(senderWindow);
+            const workArea = currentDisplay.workArea;
+            
+            const centeredX = Math.round(workArea.x + (workArea.width - adjustedWidth) / 2);
+            const centeredY = Math.round(workArea.y + (workArea.height - adjustedHeight) / 2);
+            
+            console.log(`[Layout Debug] calculateWindowSizeAdjustment: targetWidth=${targetWidth}, targetHeight=${targetHeight}, centering at ${centeredX},${centeredY}`);
+            return { 
+                x: centeredX, 
+                y: centeredY, 
+                width: adjustedWidth, 
+                height: adjustedHeight 
+            };
+        } else {
+            // Keep current position, just adjust size (chat mode)
+            console.log(`[Layout Debug] calculateWindowSizeAdjustment: targetWidth=${targetWidth}, targetHeight=${targetHeight}, keeping current position`);
+            return { 
+                ...currentBounds, 
+                width: adjustedWidth, 
+                height: adjustedHeight 
+            };
+        }
+    }
     
     // 기존 getTargetBoundsForFeatureWindows를 이 함수로 대체합니다.
     calculateFeatureWindowLayout(visibility, headerBoundsOverride = null) {

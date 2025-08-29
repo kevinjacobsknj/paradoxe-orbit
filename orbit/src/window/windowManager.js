@@ -97,6 +97,10 @@ const adjustWindowHeight = (winName, targetHeight) => {
     internalBridge.emit('window:adjustWindowHeight', { winName, targetHeight });
 };
 
+const adjustWindowSize = (winName, targetWidth, targetHeight, centerWindow = false) => {
+    internalBridge.emit('window:adjustWindowSize', { winName, targetWidth, targetHeight, centerWindow });
+};
+
 
 function setupWindowController(windowPool, layoutManager, movementManager) {
     internalBridge.on('window:requestVisibility', ({ name, visible }) => {
@@ -164,6 +168,24 @@ function setupWindowController(windowPool, layoutManager, movementManager) {
         const senderWindow = windowPool.get(winName);
         if (senderWindow) {
             const newBounds = layoutManager.calculateWindowHeightAdjustment(senderWindow, targetHeight);
+            
+            const wasResizable = senderWindow.isResizable();
+            if (!wasResizable) senderWindow.setResizable(true);
+
+            movementManager.animateWindowBounds(senderWindow, newBounds, {
+                onComplete: () => {
+                    if (!wasResizable) senderWindow.setResizable(false);
+                    updateChildWindowLayouts(true);
+                }
+            });
+        }
+    });
+
+    internalBridge.on('window:adjustWindowSize', ({ winName, targetWidth, targetHeight, centerWindow = false }) => {
+        console.log(`[Layout Debug] adjustWindowSize: targetWidth=${targetWidth}, targetHeight=${targetHeight}, centerWindow=${centerWindow}`);
+        const senderWindow = windowPool.get(winName);
+        if (senderWindow) {
+            const newBounds = layoutManager.calculateWindowSizeAdjustment(senderWindow, targetWidth, targetHeight, centerWindow);
             
             const wasResizable = senderWindow.isResizable();
             if (!wasResizable) senderWindow.setResizable(true);
@@ -827,5 +849,6 @@ module.exports = {
     getHeaderPosition,
     moveHeaderTo,
     adjustWindowHeight,
+    adjustWindowSize,
     enforceFixedHeaderPosition, // Export for testing
 };

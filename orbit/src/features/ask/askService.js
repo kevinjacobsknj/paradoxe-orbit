@@ -24,6 +24,27 @@ const execFile = util.promisify(require('child_process').execFile);
 const { desktopCapturer } = require('electron');
 const modelStateService = require('../common/services/modelStateService');
 
+// Command detection patterns
+const COMMAND_PATTERNS = {
+    search: [
+        /^search for (.+)/i,
+        /^look up (.+)/i,
+        /^find (.+)/i,
+        /^google (.+)/i,
+        /^search (.+)/i
+    ],
+    navigation: [
+        /^go to (.+)/i,
+        /^open (.+)/i,
+        /^visit (.+)/i,
+        /^navigate to (.+)/i
+    ],
+    shopping: [
+        /^(?:go to|visit|open)?\s*(.+?)\s+(?:and\s+)?(?:look for|search for|find)\s+(.+)/i,
+        /^on (.+?)\s*(?:,|and)?\s*(?:look for|search for|find)\s+(.+)/i
+    ]
+};
+
 // Try to load sharp, but don't fail if it's not available
 let sharp;
 try {
@@ -34,6 +55,79 @@ try {
     console.warn('[AskService] Screenshot functionality will work with reduced image processing capabilities');
     sharp = null;
 }
+
+// Function to detect and parse commands
+function detectCommand(userInput) {
+    const input = userInput.trim();
+    
+    // Check for search commands
+    for (const pattern of COMMAND_PATTERNS.search) {
+        const match = input.match(pattern);
+        if (match) {
+            return {
+                type: 'search',
+                query: match[1].trim(),
+                url: `https://www.google.com/search?q=${encodeURIComponent(match[1].trim())}`
+            };
+        }
+    }
+    
+    // Check for navigation commands
+    for (const pattern of COMMAND_PATTERNS.navigation) {
+        const match = input.match(pattern);
+        if (match) {
+            let url = match[1].trim();
+            // Add protocol if missing
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                // Check if it looks like a domain
+                if (url.includes('.') && !url.includes(' ')) {
+                    url = 'https://' + url;
+                } else {
+                    // Treat as search
+                    return {
+                        type: 'search',
+                        query: url,
+                        url: `https://www.google.com/search?q=${encodeURIComponent(url)}`
+                    };
+                }
+            }
+            return {
+                type: 'navigation',
+                destination: match[1].trim(),
+                url: url
+            };
+        }
+    }
+    
+    // Check for shopping commands (e.g., "go to amazon and look for headphones under 400")
+    for (const pattern of COMMAND_PATTERNS.shopping) {
+        const match = input.match(pattern);
+        if (match) {
+            const site = match[1].trim();
+            const query = match[2].trim();
+            
+            let url;
+            if (site.toLowerCase().includes('amazon')) {
+                url = `https://www.amazon.com/s?k=${encodeURIComponent(query)}`;
+            } else if (site.toLowerCase().includes('ebay')) {
+                url = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(query)}`;
+            } else {
+                // Generic site search
+                url = `https://${site}/search?q=${encodeURIComponent(query)}`;
+            }
+            
+            return {
+                type: 'shopping',
+                site: site,
+                query: query,
+                url: url
+            };
+        }
+    }
+    
+    return null;
+}
+
 let lastScreenshot = null;
 
 async function captureScreenshot(options = {}) {
@@ -294,6 +388,53 @@ class AskService {
             sessionId = await sessionRepository.getOrCreateActive('ask');
             await askRepository.addAiMessage({ sessionId, role: 'user', content: userPrompt.trim() });
             console.log(`[AskService] DB: Saved user prompt to session ${sessionId}`);
+            
+            // Check for browser commands first
+            const command = detectCommand(userPrompt);
+            if (command) {
+                console.log(`[AskService] Detected ${command.type} command:`, command);
+                
+                // Create response showing the action
+                let actionResponse = '';
+                switch (command.type) {
+                    case 'search':
+                        actionResponse = `🔍 **Searching for "${command.query}"**\n\nAutomatically opened Google search in mini browser.`;
+                        break;
+                    case 'navigation':
+                        actionResponse = `🌐 **Navigating to ${command.destination}**\n\nAutomatically opened website in mini browser.`;
+                        break;
+                    case 'shopping':
+                        actionResponse = `🛒 **Shopping on ${command.site}**\n\nAutomatically opened search for "${command.query}" in mini browser.`;
+                        break;
+                }
+                
+                // Update state with the action response
+                this.state = {
+                    ...this.state,
+                    isLoading: false,
+                    isStreaming: false,
+                    currentResponse: actionResponse,
+                    showTextInput: true,
+                };
+                this._broadcastState();
+                
+                // Signal to open mini browser via IPC
+                const askWindow = getWindowPool()?.get('ask');
+                if (askWindow && !askWindow.isDestroyed()) {
+                    console.log('[AskService] Sending mini browser command via IPC');
+                    askWindow.webContents.send('askView:openMiniBrowser', {
+                        url: command.url,
+                        title: command.type === 'search' ? `Search: ${command.query}` :
+                               command.type === 'shopping' ? `${command.site}: ${command.query}` :
+                               command.destination
+                    });
+                }
+                
+                // Save the response to DB
+                await askRepository.addAiMessage({ sessionId, role: 'assistant', content: actionResponse });
+                console.log(`[AskService] DB: Saved browser action response to session ${sessionId}`);
+                return;
+            }
             
             // Check if this requires web search/browser automation
             if (agentClient.isSearchQuery(userPrompt)) {

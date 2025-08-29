@@ -165,6 +165,7 @@ contextBridge.exposeInMainWorld('api', {
     // Window Management
     closeAskWindow: () => ipcRenderer.invoke('ask:closeAskWindow'),
     adjustWindowHeight: (winName, height) => ipcRenderer.invoke('adjust-window-height', { winName, height }),
+    adjustWindowSize: (winName, width, height, centerWindow = false) => ipcRenderer.invoke('adjust-window-size', { winName, width, height, centerWindow }),
     
     // Message Handling
     sendMessage: (text) => ipcRenderer.invoke('ask:sendQuestionFromAsk', text),
@@ -183,7 +184,11 @@ contextBridge.exposeInMainWorld('api', {
     onScrollResponseUp: (callback) => ipcRenderer.on('aks:scrollResponseUp', callback),
     removeOnScrollResponseUp: (callback) => ipcRenderer.removeListener('aks:scrollResponseUp', callback),
     onScrollResponseDown: (callback) => ipcRenderer.on('aks:scrollResponseDown', callback),
-    removeOnScrollResponseDown: (callback) => ipcRenderer.removeListener('aks:scrollResponseDown', callback)
+    removeOnScrollResponseDown: (callback) => ipcRenderer.removeListener('aks:scrollResponseDown', callback),
+    
+    // Mini browser integration
+    onOpenMiniBrowser: (callback) => ipcRenderer.on('askView:openMiniBrowser', callback),
+    removeOnOpenMiniBrowser: (callback) => ipcRenderer.removeListener('askView:openMiniBrowser', callback)
   },
 
   // Add ask namespace for MainHeader.js compatibility
